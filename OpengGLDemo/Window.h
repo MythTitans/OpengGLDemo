@@ -38,6 +38,3 @@ private:
 	int framebufferWidth;
 	int framebufferHeight;
 };
-
-void handleKeys(GLFWwindow* window, int key, int code, int action, int mode);
-void handleMouse(GLFWwindow* window, double x, double y);

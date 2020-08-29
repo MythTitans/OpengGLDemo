@@ -33,27 +33,27 @@ public:
 		return pitch;
 	}
 
-	inline glm::mat4 getProjection() const
+	inline const glm::mat4& getProjection() const
 	{
 		return projection;
 	}
 
-	inline glm::mat4 getView() const
+	inline const glm::mat4& getView() const
 	{
 		return view;
 	}
 
-	inline glm::vec3 getFront() const
+	inline const glm::vec3& getFront() const
 	{
 		return front;
 	}
 
-	inline glm::vec3 getLeft() const
+	inline const glm::vec3& getLeft() const
 	{
 		return left;
 	}
 
-	inline glm::vec3 getUp() const
+	inline const glm::vec3& getUp() const
 	{
 		return up;
 	}

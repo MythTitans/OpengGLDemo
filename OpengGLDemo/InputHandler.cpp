@@ -69,7 +69,7 @@ void InputHandler::handleMouseMoved(double x, double y)
 		firstMouseMovement = false;
 	}
 
-	horizontalMouseDelta = x - lastMouseX;
+	horizontalMouseDelta = -(x - lastMouseX);
 	verticalMouseDelta = -(y - lastMouseY);
 
 	lastMouseX = x;

@@ -10,7 +10,6 @@
 #include "RenderSystem.h"
 #include "Shader.h"
 #include "Scene.h"
-#include "ResourceLoader.h"
 
 int main(void)
 {
@@ -19,8 +18,7 @@ int main(void)
 		Window window{ 1024, 768, "OpenGL Tech Demo" };
 		Camera camera{ { 0, 0, -10 }, 0, 0, glm::radians(60.0f), window.getAspectRatio(), 0.1f, 1000 };
 		InputHandler inputHandler{ window, camera };
-		ResourceLoader resourceLoader;
-		RenderSystem renderer{ window, resourceLoader };
+		RenderSystem renderer{ window };
 
 		Scene scene;
 

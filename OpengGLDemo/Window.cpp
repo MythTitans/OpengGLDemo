@@ -4,6 +4,33 @@
 
 #include "InputHandler.h"
 
+void handleKeys(GLFWwindow* window, int key, int code, int action, int mode)
+{
+    InputHandler* inputHandler = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
+
+    if (inputHandler)
+    {
+        if (action == GLFW_PRESS || action == GLFW_REPEAT)
+        {
+            inputHandler->handleKeyPressed(key);
+        }
+        else
+        {
+            inputHandler->handleKeyReleased(key);
+        }
+    }
+}
+
+void handleMouse(GLFWwindow* window, double x, double y)
+{
+    InputHandler* inputHandler = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
+
+    if (inputHandler)
+    {
+        inputHandler->handleMouseMoved(x, y);
+    }
+}
+
 Window::Window(unsigned int width, unsigned int height, const std::string& title)
 {
     if (!glfwInit())
@@ -61,31 +88,4 @@ void Window::display() const
 void Window::close() const
 {
     glfwSetWindowShouldClose(window, GL_TRUE);
-}
-
-void handleKeys(GLFWwindow* window, int key, int code, int action, int mode)
-{
-    InputHandler* inputHandler = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
-
-    if (inputHandler)
-    {
-        if (action == GLFW_PRESS || action == GLFW_REPEAT)
-        {
-            inputHandler->handleKeyPressed(key);
-        }
-        else
-        {
-            inputHandler->handleKeyReleased(key);
-        }
-    }
-}
-
-void handleMouse(GLFWwindow* window, double x, double y)
-{
-    InputHandler* inputHandler = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
-
-    if (inputHandler)
-    {
-        inputHandler->handleMouseMoved(x, y);
-    }
 }
