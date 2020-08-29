@@ -5,7 +5,7 @@
 #include <fstream>
 #include <string>
 
-#include <glm.hpp>
+#include <glm/glm.hpp>
 
 inline std::ostream& operator<<(std::ostream& stream, const glm::vec3& vec3)
 {
