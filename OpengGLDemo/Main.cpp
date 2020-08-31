@@ -15,7 +15,7 @@ int main(void)
 {
 	try
 	{
-		Window window{ 1024, 768, "OpenGL Tech Demo" };
+		Window window{ 1920, 1080, "OpenGL Tech Demo" };
 		Camera camera{ { 0, 0, -10 }, 0, 0, glm::radians(60.0f), window.getAspectRatio(), 0.1f, 1000 };
 		InputHandler inputHandler{ window, camera };
 		RenderSystem renderer{ window };

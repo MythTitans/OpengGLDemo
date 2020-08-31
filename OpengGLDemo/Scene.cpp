@@ -1,10 +1,12 @@
 #include "Scene.h"
 
 #include "Model.h"
+#include "Mesh.h"
 
 Scene::Scene()
 {
-	models.push_back(std::make_unique<Model>());
+	auto model = Model::loadModel("Models/model.obj");
+	models.push_back(std::move(model));
 }
 
 Scene::~Scene()

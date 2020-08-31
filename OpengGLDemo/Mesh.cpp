@@ -1,22 +1,8 @@
 #include "Mesh.h"
 
-#include <array>
-
-Mesh::Mesh()
+Mesh::Mesh(const std::vector<GLfloat>& vertices, const std::vector<GLuint> indices)
 {
-	std::array<GLfloat, 9> vertices{
-		0.5, -0.5, 0.0,
-		-0.5, -0.5, 0.0,
-		0.0, 0.5, 0.0
-	};
-
-	std::array<GLuint, 3> indices{
-		0,
-		1,
-		2
-	};
-
-	indexCount = (GLsizei) indices.size();
+	indexCount = (GLsizei)indices.size();
 
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
@@ -35,6 +21,37 @@ Mesh::Mesh()
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+Mesh::Mesh(Mesh&& reference) noexcept
+{
+	vao = reference.vao;
+	vbo = reference.vbo;
+	ibo = reference.ibo;
+	indexCount = reference.indexCount;
+
+	reference.vao = 0;
+	reference.vbo = 0;
+	reference.ibo = 0;
+	reference.indexCount = 0;
+}
+
+Mesh& Mesh::operator=(Mesh&& reference) noexcept
+{
+	if (this != &reference)
+	{
+		vao = reference.vao;
+		vbo = reference.vbo;
+		ibo = reference.ibo;
+		indexCount = reference.indexCount;
+
+		reference.vao = 0;
+		reference.vbo = 0;
+		reference.ibo = 0;
+		reference.indexCount = 0;
+	}
+
+	return *this;
 }
 
 Mesh::~Mesh()
