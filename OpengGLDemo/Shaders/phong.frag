@@ -1,8 +1,10 @@
 #version 330
 
+in vec2 texCoords;
+
 out vec4 color;
 
 void main()
 {
-	color = vec4(1, 0, 0, 1);
+	color = vec4(texCoords, 0, 1);
 }

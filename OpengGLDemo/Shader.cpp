@@ -15,6 +15,19 @@ Shader::Shader(const std::string& vertexShaderCode, const std::string& fragmentS
 	link();
 }
 
+Shader::Shader(Shader&& reference) noexcept : programId{ reference.programId }
+{
+	reference.programId = 0;
+}
+
+Shader& Shader::operator=(Shader&& reference) noexcept
+{
+	this->programId = reference.programId;
+	reference.programId = 0;
+
+	return *this;
+}
+
 Shader::~Shader()
 {
 	glDeleteProgram(programId);

@@ -74,6 +74,18 @@ std::unique_ptr<Mesh> Model::loadMesh(aiMesh* mesh)
 		vertices[VERTEX_COMPONENTS * i] = vertex.x;
 		vertices[VERTEX_COMPONENTS * i + 1] = vertex.y;
 		vertices[VERTEX_COMPONENTS * i + 2] = vertex.z;
+
+		if (mesh->mTextureCoords[0])
+		{
+			auto texCoords = mesh->mTextureCoords[0][i];
+			vertices[VERTEX_COMPONENTS * i + 3] = texCoords.x;
+			vertices[VERTEX_COMPONENTS * i + 4] = texCoords.y;
+		}
+		else
+		{
+			vertices[VERTEX_COMPONENTS * i + 3] = 0;
+			vertices[VERTEX_COMPONENTS * i + 4] = 0;
+		}
 	}
 
 	size_t faceCount = mesh->mNumFaces;

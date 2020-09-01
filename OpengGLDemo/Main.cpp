@@ -10,6 +10,7 @@
 #include "RenderSystem.h"
 #include "Shader.h"
 #include "Scene.h"
+#include "Model.h"
 
 int main(void)
 {
@@ -20,7 +21,19 @@ int main(void)
 		InputHandler inputHandler{ window, camera };
 		RenderSystem renderer{ window };
 
+		auto model = Model::loadModel("Models/model.obj");
+
+		Entity entity1{ model.get() };
+		entity1.setPitch(-90.0f);
+
+		Entity entity2{ entity1 };
+		entity2.setRoll(45.0f);
+		entity2.setPosition({ 10, 0, 0 });
+		entity2.setScale({ 0.5f, 0.5f, 0.5f });
+
 		Scene scene;
+		scene.addEntity(entity1);
+		scene.addEntity(entity2);
 
 		auto previousTime = std::chrono::steady_clock::now();
 

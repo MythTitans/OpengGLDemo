@@ -1,18 +1,19 @@
 #pragma once
 
 #include <vector>
-#include <memory>
 
-class Model;
+#include "Entity.h"
 
 class Scene
 {
 public:
-	Scene();
-	~Scene();
+	void addEntity(Entity entity);
 
-	void render() const;
+	inline const std::vector<Entity>& getEntities() const
+	{
+		return entities;
+	}
 
 private:
-	std::vector<std::unique_ptr<Model>> models;
+	std::vector<Entity> entities;
 };

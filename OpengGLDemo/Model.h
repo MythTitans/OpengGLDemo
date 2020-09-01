@@ -29,6 +29,6 @@ private:
 	static std::vector<std::unique_ptr<Mesh>> loadNode(aiNode* node, const aiScene* scene);
 	static std::unique_ptr<Mesh> loadMesh(aiMesh* mesh);
 
-	static constexpr int VERTEX_COMPONENTS = 3;
+	static constexpr int VERTEX_COMPONENTS = 5;
 };
 

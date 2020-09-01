@@ -68,7 +68,7 @@ void Camera::update(float deltaTime)
 	setPitch(pitch + pitchRotation);
 	setYaw(yaw + yawRotation);
 
-	movement = glm::vec3{ 0, 0, 0 };
+	movement = { 0, 0, 0 };
 	pitchRotation = 0;
 	yawRotation = 0;
 
