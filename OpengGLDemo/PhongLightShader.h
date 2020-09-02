@@ -15,6 +15,7 @@ public:
 	void setProjection(const glm::mat4& projection) const;
 	void setView(const glm::mat4& view) const;
 	void setModel(const glm::mat4& model) const;
+	void setDiffuseTexture(int textureUnit) const;
 
 private:
 	inline GLuint getUniformLocation(const std::string& name) const
@@ -26,5 +27,6 @@ private:
 	GLuint uniformProjectionLocation;
 	GLuint uniformViewLocation;
 	GLuint uniformModelLocation;
+	GLuint uniformDiffuseTextureLocation;
 };
 

@@ -1,9 +1,9 @@
 #include "Mesh.h"
 
-Mesh::Mesh(const std::vector<GLfloat>& vertices, const std::vector<GLuint> indices)
-{
-	indexCount = (GLsizei)indices.size();
+#include "Texture.h"
 
+Mesh::Mesh(const std::vector<GLfloat>& vertices, const std::vector<GLuint> indices, Texture* texture) : indexCount{ (GLsizei)indices.size() }, texture { texture }
+{
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
@@ -14,7 +14,7 @@ Mesh::Mesh(const std::vector<GLfloat>& vertices, const std::vector<GLuint> indic
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 5, 0);
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 5, (void*) sizeof(vertices[0] * 3));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 5, (void*) (sizeof(vertices[0]) * 3));
 	glEnableVertexAttribArray(1);
 
 	glGenBuffers(1, &ibo);
@@ -32,11 +32,13 @@ Mesh::Mesh(Mesh&& reference) noexcept
 	vbo = reference.vbo;
 	ibo = reference.ibo;
 	indexCount = reference.indexCount;
+	texture = reference.texture;
 
 	reference.vao = 0;
 	reference.vbo = 0;
 	reference.ibo = 0;
 	reference.indexCount = 0;
+	reference.texture = nullptr;
 }
 
 Mesh& Mesh::operator=(Mesh&& reference) noexcept
@@ -47,11 +49,13 @@ Mesh& Mesh::operator=(Mesh&& reference) noexcept
 		vbo = reference.vbo;
 		ibo = reference.ibo;
 		indexCount = reference.indexCount;
+		texture = reference.texture;
 
 		reference.vao = 0;
 		reference.vbo = 0;
 		reference.ibo = 0;
 		reference.indexCount = 0;
+		reference.texture = nullptr;
 	}
 
 	return *this;
@@ -66,7 +70,17 @@ Mesh::~Mesh()
 
 void Mesh::render() const
 {
+	if (texture)
+	{
+		texture->use();
+	}
+
 	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
 	glBindVertexArray(0);
+
+	if (texture)
+	{
+		texture->unuse();
+	}
 }

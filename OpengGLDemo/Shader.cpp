@@ -22,8 +22,11 @@ Shader::Shader(Shader&& reference) noexcept : programId{ reference.programId }
 
 Shader& Shader::operator=(Shader&& reference) noexcept
 {
-	this->programId = reference.programId;
-	reference.programId = 0;
+	if (this != &reference)
+	{
+		this->programId = reference.programId;
+		reference.programId = 0;
+	}
 
 	return *this;
 }
