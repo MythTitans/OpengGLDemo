@@ -3,12 +3,13 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Common.h"
+#include "Material.h"
 
 PhongLightShader::PhongLightShader() :
 	Shader{ readFileContent("Shaders/phong.vert"), readFileContent("Shaders/phong.frag") },
 	uniformProjectionLocation{ getUniformLocation("projection") },
 	uniformViewLocation{ getUniformLocation("view") },
-	uniformModelLocation{ getUniformLocation("model") },
+	uniformTransformLocation{ getUniformLocation("model") },
 	uniformDiffuseTextureLocation{ getUniformLocation("diffuseTexture") }
 {
 }
@@ -23,12 +24,33 @@ void PhongLightShader::setView(const glm::mat4& view) const
 	glUniformMatrix4fv(uniformViewLocation, 1, GL_FALSE, glm::value_ptr(view));
 }
 
-void PhongLightShader::setModel(const glm::mat4& model) const
+void PhongLightShader::setTransform(const glm::mat4& transform) const
 {
-	glUniformMatrix4fv(uniformModelLocation, 1, GL_FALSE, glm::value_ptr(model));
+	glUniformMatrix4fv(uniformTransformLocation, 1, GL_FALSE, glm::value_ptr(transform));
 }
 
-void PhongLightShader::setDiffuseTexture(int textureUnit) const
+void PhongLightShader::useMaterial(const Material* material) const
 {
-	glUniform1i(uniformDiffuseTextureLocation, textureUnit);
+	if (material)
+	{
+		auto* texture = material->getTexture();
+		if (texture)
+		{
+			texture->use();
+		}
+
+		glUniform1i(uniformDiffuseTextureLocation, 0);
+	}
+}
+
+void PhongLightShader::unuseMaterial(const Material* material) const
+{
+	if (material)
+	{
+		auto* texture = material->getTexture();
+		if (texture)
+		{
+			texture->unuse();
+		}
+	}
 }

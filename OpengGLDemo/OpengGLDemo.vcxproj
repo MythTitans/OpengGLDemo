@@ -159,6 +159,7 @@
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="PhongLightShader.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="Common.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="InputHandler.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="PhongLightShader.h" />

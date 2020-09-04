@@ -1,8 +1,8 @@
 #include "Mesh.h"
 
-#include "Texture.h"
+#include "Shader.h"
 
-Mesh::Mesh(const std::vector<GLfloat>& vertices, const std::vector<GLuint> indices, Texture* texture) : indexCount{ (GLsizei)indices.size() }, texture { texture }
+Mesh::Mesh(const std::vector<GLfloat>& vertices, const std::vector<GLuint> indices, std::unique_ptr<Material> material) : indexCount{ (GLsizei)indices.size() }, material{ std::move(material) }
 {
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
@@ -32,13 +32,12 @@ Mesh::Mesh(Mesh&& reference) noexcept
 	vbo = reference.vbo;
 	ibo = reference.ibo;
 	indexCount = reference.indexCount;
-	texture = reference.texture;
+	material = std::move(reference.material);
 
 	reference.vao = 0;
 	reference.vbo = 0;
 	reference.ibo = 0;
 	reference.indexCount = 0;
-	reference.texture = nullptr;
 }
 
 Mesh& Mesh::operator=(Mesh&& reference) noexcept
@@ -49,13 +48,12 @@ Mesh& Mesh::operator=(Mesh&& reference) noexcept
 		vbo = reference.vbo;
 		ibo = reference.ibo;
 		indexCount = reference.indexCount;
-		texture = reference.texture;
+		material = std::move(reference.material);
 
 		reference.vao = 0;
 		reference.vbo = 0;
 		reference.ibo = 0;
 		reference.indexCount = 0;
-		reference.texture = nullptr;
 	}
 
 	return *this;
@@ -68,19 +66,13 @@ Mesh::~Mesh()
 	glDeleteVertexArrays(1, &vao);
 }
 
-void Mesh::render() const
+void Mesh::render(const Shader& shader) const
 {
-	if (texture)
-	{
-		texture->use();
-	}
+	shader.useMaterial(material.get());
 
 	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
 	glBindVertexArray(0);
 
-	if (texture)
-	{
-		texture->unuse();
-	}
+	shader.unuseMaterial(material.get());
 }

@@ -14,8 +14,9 @@ public:
 	PhongLightShader(const std::string& vertexShaderCode, const std::string& fragmentShaderCode) = delete;
 	void setProjection(const glm::mat4& projection) const;
 	void setView(const glm::mat4& view) const;
-	void setModel(const glm::mat4& model) const;
-	void setDiffuseTexture(int textureUnit) const;
+	void setTransform(const glm::mat4& transform) const;
+	void useMaterial(const Material* material) const override;
+	void unuseMaterial(const Material* material) const override;
 
 private:
 	inline GLuint getUniformLocation(const std::string& name) const
@@ -26,7 +27,7 @@ private:
 private:
 	GLuint uniformProjectionLocation;
 	GLuint uniformViewLocation;
-	GLuint uniformModelLocation;
+	GLuint uniformTransformLocation;
 	GLuint uniformDiffuseTextureLocation;
 };
 

@@ -37,7 +37,7 @@ public:
 		this->scale = scale;
 	}
 
-	inline glm::vec3 getPosition() const
+	inline const glm::vec3& getPosition() const
 	{
 		return position;
 	}
@@ -57,12 +57,12 @@ public:
 		return roll;
 	}
 
-	inline glm::vec3 getScale() const
+	inline const glm::vec3& getScale() const
 	{
 		return scale;
 	}
 
-	inline Model* getModel() const
+	inline const Model* getModel() const
 	{
 		return model;
 	}

@@ -5,6 +5,8 @@
 
 #include <gl/glew.h>
 
+#include "Material.h"
+
 class Shader
 {
 public:
@@ -17,6 +19,9 @@ public:
 
 	void use() const;
 	void unuse() const;
+
+	virtual void useMaterial(const Material* material) const = 0;
+	virtual void unuseMaterial(const Material* material) const = 0;
 
 protected:
 	GLuint programId;

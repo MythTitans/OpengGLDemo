@@ -39,11 +39,11 @@ std::unique_ptr<Model> Model::loadModel(std::filesystem::path filePath)
 	return std::make_unique<Model>(std::move(meshes), std::move(textures));
 }
 
-void Model::render() const
+void Model::render(const Shader& shader) const
 {
 	for (const auto& mesh : meshes)
 	{
-		mesh->render();
+		mesh->render(shader);
 	}
 }
 
@@ -113,7 +113,9 @@ std::unique_ptr<Mesh> Model::loadMesh(aiMesh* mesh, const std::vector<std::uniqu
 
 	auto* texture = textures[mesh->mMaterialIndex].get();
 
-	return std::make_unique<Mesh>(vertices, indices, texture);
+	// TODO load real material + Mesh should hold a raw pointer (since multiple meshes can share the same material)
+	auto material = std::make_unique<Material>(texture);
+	return std::make_unique<Mesh>(vertices, indices, std::move(material));
 }
 
 std::vector<std::unique_ptr<Texture>> Model::loadTextures(const aiScene* scene)

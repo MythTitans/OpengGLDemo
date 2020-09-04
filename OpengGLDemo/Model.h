@@ -9,6 +9,7 @@
 
 #include "Mesh.h"
 #include "Texture.h"
+#include "Shader.h"
 
 class Model
 {
@@ -21,7 +22,7 @@ public:
 
 	static std::unique_ptr<Model> loadModel(std::filesystem::path filePath);
 
-	void render() const;
+	void render(const Shader& shader) const;
 
 private:
 	std::vector<std::unique_ptr<Mesh>> meshes;

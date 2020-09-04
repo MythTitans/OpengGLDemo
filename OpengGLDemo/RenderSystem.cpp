@@ -37,15 +37,14 @@ void RenderSystem::render(const Scene& scene, const Camera& camera) const
 	phongLightShader->use();
 	phongLightShader->setProjection(camera.getProjection());
 	phongLightShader->setView(camera.getView());
-	phongLightShader->setDiffuseTexture(0);
 
 	for (const auto& entity : scene.getEntities())
 	{
-		phongLightShader->setModel(entity.computeTransform());
+		phongLightShader->setTransform(entity.computeTransform());
 		auto* model = entity.getModel();
 		if (model)
 		{
-			model->render();
+			model->render(*phongLightShader);
 		}
 	}
 
