@@ -15,6 +15,7 @@ public:
 	void setProjection(const glm::mat4& projection) const;
 	void setView(const glm::mat4& view) const;
 	void setTransform(const glm::mat4& transform) const;
+	void setAmbientColor(const glm::vec3& ambientColor);
 	void useMaterial(const Material* material) const override;
 	void unuseMaterial(const Material* material) const override;
 
@@ -28,6 +29,8 @@ private:
 	GLuint uniformProjectionLocation;
 	GLuint uniformViewLocation;
 	GLuint uniformTransformLocation;
+	GLuint uniformAmbientColorLocation;
 	GLuint uniformDiffuseTextureLocation;
+	glm::vec3 ambientColor;
 };
 

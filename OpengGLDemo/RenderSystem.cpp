@@ -25,7 +25,7 @@ RenderSystem::RenderSystem(const Window& window)
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 
-	glClearColor(0.3f, 0.2f, 0.6f, 1.0f);
+	glClearColor(0.25f, 0.25f, 0.25f, 1);
 
 	phongLightShader = std::make_unique<PhongLightShader>();
 }
@@ -37,6 +37,7 @@ void RenderSystem::render(const Scene& scene, const Camera& camera) const
 	phongLightShader->use();
 	phongLightShader->setProjection(camera.getProjection());
 	phongLightShader->setView(camera.getView());
+	phongLightShader->setAmbientColor(scene.getAmbientColor());
 
 	for (const auto& entity : scene.getEntities())
 	{

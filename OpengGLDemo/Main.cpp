@@ -12,6 +12,8 @@
 #include "Scene.h"
 #include "Model.h"
 
+std::unique_ptr<Model> createGround(float size);
+
 int main(void)
 {
 	try
@@ -21,19 +23,25 @@ int main(void)
 		InputHandler inputHandler{ window, camera };
 		RenderSystem renderer{ window };
 
+		auto ground = createGround(50.0f);
 		auto model = Model::loadModel("Models/model.obj");
 
 		Entity entity1{ model.get() };
 		entity1.setPitch(-90.0f);
+		entity1.setPosition({ 0.0f, 3.0f, 0.0f });
 
 		Entity entity2{ entity1 };
 		entity2.setRoll(45.0f);
-		entity2.setPosition({ 10, 0, 0 });
+		entity2.setPosition({ 10.0f, 3.0f, 0.0f });
 		entity2.setScale({ 0.5f, 0.5f, 0.5f });
 
+		Entity groundEntity{ ground.get() };
+
 		Scene scene;
+		scene.setAmbientColor({ 0.5f, 0.5f, 0.5f });
 		scene.addEntity(entity1);
 		scene.addEntity(entity2);
+		scene.addEntity(groundEntity);
 
 		auto previousTime = std::chrono::steady_clock::now();
 
@@ -60,4 +68,31 @@ int main(void)
 	}
     
     return 0;
+}
+
+std::unique_ptr<Model> createGround(float size)
+{
+	float halfSize = size / 2;
+	float quarterSize = halfSize / 2;
+	std::vector<GLfloat> vertices{
+		halfSize, 0.0f, halfSize,		0.0f, 0.0f,								0.0f, 1.0f, 0.0f,
+		halfSize, 0.0f, -halfSize,		0.25f * halfSize, 0.0f,					0.0f, 1.0f, 0.0f,
+		-halfSize, 0.0f, -halfSize,		0.25f * halfSize, 0.25f * halfSize,		0.0f, 1.0f, 0.0f,
+		-halfSize, 0.0f, halfSize,		0.0f, 0.25f * halfSize,					0.0f, 1.0f, 0.0f
+	};
+
+	std::vector<GLuint> indices{
+		0, 1, 2,
+		0, 2, 3
+	};
+
+	auto texture = Texture::loadTexture("Textures/dirt.png");
+	auto plane = std::make_unique<Mesh>(std::move(vertices), std::move(indices), std::make_unique<Material>(texture.get()));
+
+	std::vector<std::unique_ptr<Mesh>> meshes{ 1 };
+	meshes[0] = std::move(plane);
+	std::vector<std::unique_ptr<Texture>> textures{ 1 };
+	textures[0] = std::move(texture);
+
+	return std::make_unique<Model>(std::move(meshes), std::move(textures));
 }

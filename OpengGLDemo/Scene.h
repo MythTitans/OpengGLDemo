@@ -7,7 +7,12 @@
 class Scene
 {
 public:
+	Scene();
+
 	void addEntity(Entity entity);
+	void setAmbientColor(const glm::vec3& ambientColor);
+
+	const glm::vec3& getAmbientColor() const;
 
 	inline const std::vector<Entity>& getEntities() const
 	{
@@ -16,4 +21,5 @@ public:
 
 private:
 	std::vector<Entity> entities;
+	glm::vec3 ambientColor;
 };

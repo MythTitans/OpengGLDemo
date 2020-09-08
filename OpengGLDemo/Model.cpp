@@ -93,6 +93,11 @@ std::unique_ptr<Mesh> Model::loadMesh(aiMesh* mesh, const std::vector<std::uniqu
 			vertices[VERTEX_COMPONENTS * i + 3] = 0;
 			vertices[VERTEX_COMPONENTS * i + 4] = 0;
 		}
+
+		auto normal = mesh->mNormals[i];
+		vertices[VERTEX_COMPONENTS * i + 5] = normal.x;
+		vertices[VERTEX_COMPONENTS * i + 6] = normal.y;
+		vertices[VERTEX_COMPONENTS * i + 7] = normal.z;
 	}
 
 	size_t faceCount = mesh->mNumFaces;

@@ -32,6 +32,7 @@ private:
 	static std::unique_ptr<Mesh> loadMesh(aiMesh* mesh, const std::vector<std::unique_ptr<Texture>>& textures);
 	static std::vector<std::unique_ptr<Texture>> loadTextures(const aiScene* scene);
 
-	static constexpr int VERTEX_COMPONENTS = 5;
+	// TODO should be a Mesh constant
+	static constexpr int VERTEX_COMPONENTS = 8;
 };
 
