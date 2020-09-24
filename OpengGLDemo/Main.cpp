@@ -39,11 +39,12 @@ int main(void)
 		Entity groundEntity{ ground.get() };
 
 		Scene scene;
-		scene.setAmbientColor({ 0.2f, 0.178f, 0.16f });
+		scene.setAmbientColor({ 0.1f, 0.1f, 0.1f });
 		scene.addEntity(entity1);
 		scene.addEntity(entity2);
 		scene.addEntity(groundEntity);
-		scene.addLight(Light::directionalLight(1.0f, { 1.0f, 0.89f, 0.8f }, { 1.0f, -1.0f, 1.0f }));
+		scene.addLight(Light::directionalLight(0.3f, { 1.0f, 0.89f, 0.8f }, { 1.0f, -1.0f, 1.0f }));
+		scene.addLight(Light::pointLight(1.0f, { 0.0f, 1.0f, 0.0f }, { 5.0f, 3.0f, 0.0f }, 0.3f, 0.2f, 0.1f));
 
 		auto previousTime = std::chrono::steady_clock::now();
 

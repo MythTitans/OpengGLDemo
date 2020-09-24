@@ -17,6 +17,16 @@ struct UniformDirectionalLight
 	GLuint directionLocation;
 };
 
+struct UniformPointLight
+{
+	GLuint intensityLocation;
+	GLuint colorLocation;
+	GLuint positionLocation;
+	GLuint constantAttenuationLocation;
+	GLuint linearAttenuationLocation;
+	GLuint quadricAttenuationLocation;
+};
+
 class PhongLightShader : public Shader
 {
 public:
@@ -39,9 +49,9 @@ private:
 	}
 
 private:
-	static constexpr size_t MAX_DIRECTIONAL_LIGHTS = 4;
-	static constexpr size_t MAX_POINT_LIGHTS = 12;
-	static constexpr size_t MAX_SPOT_LIGHTS = 8;
+	static constexpr int MAX_DIRECTIONAL_LIGHTS = 4;
+	static constexpr int MAX_POINT_LIGHTS = 12;
+	static constexpr int MAX_SPOT_LIGHTS = 8;
 
 	GLuint uniformProjectionLocation;
 	GLuint uniformViewLocation;
@@ -49,6 +59,9 @@ private:
 	GLuint uniformAmbientColorLocation;
 	GLuint uniformDiffuseTextureLocation;
 	std::array<UniformDirectionalLight, MAX_DIRECTIONAL_LIGHTS> uniformDirectionalLights;
+	std::array<UniformPointLight, MAX_POINT_LIGHTS> uniformPointLights;
+	GLuint uniformDirectionLightCount;
+	GLuint uniformPointLightCount;
 
 	glm::vec3 ambientColor;
 };
