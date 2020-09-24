@@ -7,6 +7,11 @@
 
 #include <glm/glm.hpp>
 
+inline void log(const std::string& log)
+{
+	std::cout << log << std::endl;
+}
+
 inline std::ostream& operator<<(std::ostream& stream, const glm::vec3& vec3)
 {
 	return stream << "(" << vec3.x << " ; " << vec3.y << " ; " << vec3.z << ")";

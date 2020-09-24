@@ -11,6 +11,7 @@
 #include "Shader.h"
 #include "Scene.h"
 #include "Model.h"
+#include "Light.h"
 
 std::unique_ptr<Model> createGround(float size);
 
@@ -31,17 +32,18 @@ int main(void)
 		entity1.setPosition({ 0.0f, 3.0f, 0.0f });
 
 		Entity entity2{ entity1 };
-		entity2.setRoll(45.0f);
+		entity2.setRoll(90.0f);
 		entity2.setPosition({ 10.0f, 3.0f, 0.0f });
 		entity2.setScale({ 0.5f, 0.5f, 0.5f });
 
 		Entity groundEntity{ ground.get() };
 
 		Scene scene;
-		scene.setAmbientColor({ 0.5f, 0.5f, 0.5f });
+		scene.setAmbientColor({ 0.2f, 0.178f, 0.16f });
 		scene.addEntity(entity1);
 		scene.addEntity(entity2);
 		scene.addEntity(groundEntity);
+		scene.addLight(Light::directionalLight(1.0f, { 1.0f, 0.89f, 0.8f }, { 1.0f, -1.0f, 1.0f }));
 
 		auto previousTime = std::chrono::steady_clock::now();
 
