@@ -13,7 +13,8 @@ PhongLightShader::PhongLightShader() :
 	uniformAmbientColorLocation{ getUniformLocation("ambientColor") },
 	uniformDiffuseTextureLocation{ getUniformLocation("diffuseTexture") },
 	uniformDirectionLightCount{ getUniformLocation("directionalLightCount") },
-	uniformPointLightCount{ getUniformLocation("pointLightCount") }
+	uniformPointLightCount{ getUniformLocation("pointLightCount") },
+	uniformSpotLightCount{ getUniformLocation("spotLightCount") }
 {
 	char buffer[128];
 	auto indexedLocation = [&buffer](const std::string& location, int index) {
@@ -40,7 +41,14 @@ PhongLightShader::PhongLightShader() :
 
 	for (int i = 0; i < MAX_SPOT_LIGHTS; ++i)
 	{
-
+		uniformSpotLights[i].intensityLocation = getUniformLocation(indexedLocation("spotLights[%d].base.base.intensity", i));
+		uniformSpotLights[i].colorLocation = getUniformLocation(indexedLocation("spotLights[%d].base.base.color", i));
+		uniformSpotLights[i].positionLocation = getUniformLocation(indexedLocation("spotLights[%d].base.position", i));
+		uniformSpotLights[i].directionLocation = getUniformLocation(indexedLocation("spotLights[%d].direction", i));
+		uniformSpotLights[i].constantAttenuationLocation = getUniformLocation(indexedLocation("spotLights[%d].base.constantAttenuation", i));
+		uniformSpotLights[i].linearAttenuationLocation = getUniformLocation(indexedLocation("spotLights[%d].base.linearAttenuation", i));
+		uniformSpotLights[i].quadricAttenuationLocation = getUniformLocation(indexedLocation("spotLights[%d].base.quadricAttenuation", i));
+		uniformSpotLights[i].edgeLocation = getUniformLocation(indexedLocation("spotLights[%d].edge", i));
 	}
 }
 
@@ -71,7 +79,7 @@ void PhongLightShader::setDirectionalLights(const std::vector<Light>& directiona
 		throw std::runtime_error("Too many directional lights !");
 	}
 
-	glUniform1i(uniformDirectionLightCount, directionalLights.size());
+	glUniform1i(uniformDirectionLightCount, (int) directionalLights.size());
 
 	for (size_t i = 0; i < directionalLights.size(); ++i)
 	{
@@ -91,7 +99,7 @@ void PhongLightShader::setPointLights(const std::vector<Light>& pointLights)
 		throw std::runtime_error("Too many point lights !");
 	}
 
-	glUniform1i(uniformPointLightCount, pointLights.size());
+	glUniform1i(uniformPointLightCount, (int) pointLights.size());
 
 	for (size_t i = 0; i < pointLights.size(); ++i)
 	{
@@ -114,16 +122,21 @@ void PhongLightShader::setSpotLights(const std::vector<Light>& spotLights)
 		throw std::runtime_error("Too many spot lights !");
 	}
 
-	for (const Light& light : spotLights)
-	{
-		// TODO uniform for light parameters
+	glUniform1i(uniformSpotLightCount, spotLights.size());
 
-			// position
-			// direction
-			// intensity
-			// color
-			// attenuation
-			// angle
+	for (int i = 0; i < (int) spotLights.size(); ++i)
+	{
+		const Light& light = spotLights[i];
+		UniformSpotLight uniformLight = uniformSpotLights[i];
+
+		glUniform1f(uniformLight.intensityLocation, light.getIntensity());
+		glUniform3fv(uniformLight.colorLocation, 1, glm::value_ptr(light.getColor()));
+		glUniform3fv(uniformLight.positionLocation, 1, glm::value_ptr(light.getPosition()));
+		glUniform3fv(uniformLight.directionLocation, 1, glm::value_ptr(light.getDirection()));
+		glUniform1f(uniformLight.constantAttenuationLocation, light.getConstantAttenuation());
+		glUniform1f(uniformLight.linearAttenuationLocation, light.getLinearAttenuation());
+		glUniform1f(uniformLight.quadricAttenuationLocation, light.getQuadricAttenuation());
+		glUniform1f(uniformLight.edgeLocation, light.getEdge());
 	}
 }
 

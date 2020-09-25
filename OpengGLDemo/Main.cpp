@@ -45,6 +45,7 @@ int main(void)
 		scene.addEntity(groundEntity);
 		scene.addLight(Light::directionalLight(0.3f, { 1.0f, 0.89f, 0.8f }, { 1.0f, -1.0f, 1.0f }));
 		scene.addLight(Light::pointLight(1.0f, { 0.0f, 1.0f, 0.0f }, { 5.0f, 3.0f, 0.0f }, 0.3f, 0.2f, 0.1f));
+		scene.addLight(Light::spotLight(1.0f, { 1.0f, 0.0f, 1.0f }, { -5.0f, 3.0f, 0.0f }, { 2.0f, -1.0f, 0.0f }, 0.1f, 0.1f, 0.1f, glm::radians(90.0f)));
 
 		auto previousTime = std::chrono::steady_clock::now();
 

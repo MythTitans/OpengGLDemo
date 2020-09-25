@@ -56,6 +56,7 @@ public:
 	inline void setAngle(float angle)
 	{
 		this->angle = angle;
+		this->edge = cosf(angle / 2);
 	}
 
 	inline Type getType() const
@@ -103,6 +104,11 @@ public:
 		return angle;
 	}
 
+	inline float getEdge() const
+	{
+		return edge;
+	}
+
 private:
 	Type type;
 	glm::vec3 position;
@@ -113,4 +119,5 @@ private:
 	float linearAttenuation;
 	float quadricAttenuation;
 	float angle;
+	float edge;
 };
