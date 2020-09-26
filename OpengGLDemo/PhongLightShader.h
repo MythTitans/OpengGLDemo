@@ -39,6 +39,13 @@ struct UniformSpotLight
 	GLuint edgeLocation;
 };
 
+struct UniformMaterial
+{
+	GLuint ambientColorLocation;
+	GLuint diffuseColorLocation;
+	GLuint specularColorLocation;
+};
+
 class PhongLightShader : public Shader
 {
 public:
@@ -76,6 +83,7 @@ private:
 	GLuint uniformDirectionLightCount;
 	GLuint uniformPointLightCount;
 	GLuint uniformSpotLightCount;
+	UniformMaterial uniformMaterial;
 
 	glm::vec3 ambientColor;
 };

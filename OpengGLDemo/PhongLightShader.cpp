@@ -50,6 +50,10 @@ PhongLightShader::PhongLightShader() :
 		uniformSpotLights[i].quadricAttenuationLocation = getUniformLocation(indexedLocation("spotLights[%d].base.quadricAttenuation", i));
 		uniformSpotLights[i].edgeLocation = getUniformLocation(indexedLocation("spotLights[%d].edge", i));
 	}
+
+	uniformMaterial.ambientColorLocation = getUniformLocation("material.ambientColor");
+	uniformMaterial.diffuseColorLocation = getUniformLocation("material.diffuseColor");
+	uniformMaterial.specularColorLocation = getUniformLocation("material.specularColor");
 }
 
 void PhongLightShader::setProjection(const glm::mat4& projection) const
@@ -144,6 +148,10 @@ void PhongLightShader::useMaterial(const Material* material) const
 {
 	if (material)
 	{
+		glUniform3fv(uniformMaterial.ambientColorLocation, 1, glm::value_ptr(material->getAmbientColor()));
+		glUniform3fv(uniformMaterial.diffuseColorLocation, 1, glm::value_ptr(material->getDiffuseColor()));
+		glUniform3fv(uniformMaterial.specularColorLocation, 1, glm::value_ptr(material->getSpecularColor()));
+
 		auto* texture = material->getTexture();
 		if (texture)
 		{

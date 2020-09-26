@@ -10,6 +10,13 @@ in vec3 normal;
 
 out vec4 finalColor;
 
+struct Material
+{
+	vec3 ambientColor;
+	vec3 diffuseColor;
+	vec3 specularColor;
+};
+
 struct Light
 {
 	float intensity;
@@ -39,12 +46,15 @@ struct SpotLight
 };
 
 uniform vec3 ambientColor;
+
 uniform DirectionalLight directionalLights[MAX_DIRECTIONAL_LIGHTS];
 uniform PointLight pointLights[MAX_POINT_LIGHTS];
 uniform SpotLight spotLights[MAX_SPOT_LIGHTS];
 uniform int directionalLightCount;
 uniform int pointLightCount;
 uniform int spotLightCount;
+
+uniform Material material;
 
 uniform sampler2D diffuseTexture;
 
@@ -123,6 +133,6 @@ void main()
 {
 	vec3 lightColor = computeDirectionalLights() + computePointLights() + computeSpotLights();
 
-	vec3 color = (ambientColor + lightColor) * texture(diffuseTexture, texCoords).xyz;
+	vec3 color = (ambientColor * material.ambientColor + lightColor * material.diffuseColor) * texture(diffuseTexture, texCoords).xyz;
 	finalColor = vec4(color, 1);
 }
