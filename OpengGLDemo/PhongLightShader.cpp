@@ -122,7 +122,7 @@ void PhongLightShader::setSpotLights(const std::vector<Light>& spotLights)
 		throw std::runtime_error("Too many spot lights !");
 	}
 
-	glUniform1i(uniformSpotLightCount, spotLights.size());
+	glUniform1i(uniformSpotLightCount, (int) spotLights.size());
 
 	for (int i = 0; i < (int) spotLights.size(); ++i)
 	{

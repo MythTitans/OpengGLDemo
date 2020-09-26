@@ -14,7 +14,7 @@
 class Model
 {
 public:
-	Model(std::vector<std::unique_ptr<Mesh>>&& meshes, std::vector<std::unique_ptr<Texture>>&& textures);
+	Model(std::vector<std::unique_ptr<Mesh>>&& meshes, std::vector<std::unique_ptr<Material>>&& materials);
 	Model(const Model&) = delete;
 	Model& operator=(const Model&) = delete;
 	Model(Model&& reference) noexcept;
@@ -26,11 +26,11 @@ public:
 
 private:
 	std::vector<std::unique_ptr<Mesh>> meshes;
-	std::vector<std::unique_ptr<Texture>> textures;
+	std::vector<std::unique_ptr<Material>> materials;
 
-	static std::vector<std::unique_ptr<Mesh>> loadMeshes(aiNode* node, const aiScene* scene, const std::vector<std::unique_ptr<Texture>>& textures);
-	static std::unique_ptr<Mesh> loadMesh(aiMesh* mesh, const std::vector<std::unique_ptr<Texture>>& textures);
-	static std::vector<std::unique_ptr<Texture>> loadTextures(const aiScene* scene);
+	static std::vector<std::unique_ptr<Mesh>> loadMeshes(aiNode* node, const aiScene* scene, const std::vector<std::unique_ptr<Material>>& materials);
+	static std::unique_ptr<Mesh> loadMesh(aiMesh* mesh, const std::vector<std::unique_ptr<Material>>& materials);
+	static std::vector<std::unique_ptr<Material>> loadMaterials(const aiScene* scene);
 
 	// TODO should be a Mesh constant
 	static constexpr int VERTEX_COMPONENTS = 8;

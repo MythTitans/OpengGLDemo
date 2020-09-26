@@ -90,13 +90,16 @@ std::unique_ptr<Model> createGround(float size)
 		0, 2, 3
 	};
 
+	glm::vec3 fullWhite{ 1.0f, 1.0f, 1.0f };
+
 	auto texture = Texture::loadTexture("Textures/dirt.png");
-	auto plane = std::make_unique<Mesh>(std::move(vertices), std::move(indices), std::make_unique<Material>(texture.get()));
+	auto material = std::make_unique<Material>(fullWhite, fullWhite, fullWhite, std::move(texture));
+	auto plane = std::make_unique<Mesh>(std::move(vertices), std::move(indices), material.get());
 
 	std::vector<std::unique_ptr<Mesh>> meshes{ 1 };
 	meshes[0] = std::move(plane);
-	std::vector<std::unique_ptr<Texture>> textures{ 1 };
-	textures[0] = std::move(texture);
+	std::vector<std::unique_ptr<Material>> materials{ 1 };
+	materials[0] = std::move(material);
 
-	return std::make_unique<Model>(std::move(meshes), std::move(textures));
+	return std::make_unique<Model>(std::move(meshes), std::move(materials));
 }

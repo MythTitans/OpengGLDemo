@@ -2,7 +2,7 @@
 
 #include "Shader.h"
 
-Mesh::Mesh(const std::vector<GLfloat>& vertices, const std::vector<GLuint> indices, std::unique_ptr<Material> material) : indexCount{ (GLsizei)indices.size() }, material{ std::move(material) }
+Mesh::Mesh(const std::vector<GLfloat>& vertices, const std::vector<GLuint> indices, const Material* material) : indexCount{ (GLsizei)indices.size() }, material{ material }
 {
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
@@ -71,11 +71,11 @@ Mesh::~Mesh()
 
 void Mesh::render(const Shader& shader) const
 {
-	shader.useMaterial(material.get());
+	shader.useMaterial(material);
 
 	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
 	glBindVertexArray(0);
 
-	shader.unuseMaterial(material.get());
+	shader.unuseMaterial(material);
 }

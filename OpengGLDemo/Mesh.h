@@ -11,7 +11,7 @@ class Shader;
 class Mesh
 {
 public:
-	Mesh(const std::vector<GLfloat>& vertices, const std::vector<GLuint> indices, std::unique_ptr<Material> material);
+	Mesh(const std::vector<GLfloat>& vertices, const std::vector<GLuint> indices, const Material* material);
 	Mesh(const Mesh&) = delete;
 	Mesh& operator=(const Mesh&) = delete;
 	Mesh(Mesh&& reference) noexcept;
@@ -25,6 +25,6 @@ private:
 	GLuint vbo;
 	GLuint ibo;
 	GLsizei indexCount;
-	std::unique_ptr<Material> material;
+	const Material* material;
 };
 
