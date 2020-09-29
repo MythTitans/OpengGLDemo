@@ -10,6 +10,7 @@ PhongLightShader::PhongLightShader() :
 	uniformProjectionLocation{ getUniformLocation("projection") },
 	uniformViewLocation{ getUniformLocation("view") },
 	uniformTransformLocation{ getUniformLocation("model") },
+	uniformEyePositionLocation{ getUniformLocation("eyePosition") },
 	uniformAmbientColorLocation{ getUniformLocation("ambientColor") },
 	uniformDiffuseTextureLocation{ getUniformLocation("diffuseTexture") },
 	uniformDirectionLightCount{ getUniformLocation("directionalLightCount") },
@@ -54,6 +55,7 @@ PhongLightShader::PhongLightShader() :
 	uniformMaterial.ambientColorLocation = getUniformLocation("material.ambientColor");
 	uniformMaterial.diffuseColorLocation = getUniformLocation("material.diffuseColor");
 	uniformMaterial.specularColorLocation = getUniformLocation("material.specularColor");
+	uniformMaterial.specularPowerLocation = getUniformLocation("material.specularPower");
 }
 
 void PhongLightShader::setProjection(const glm::mat4& projection) const
@@ -64,11 +66,17 @@ void PhongLightShader::setProjection(const glm::mat4& projection) const
 void PhongLightShader::setView(const glm::mat4& view) const
 {
 	glUniformMatrix4fv(uniformViewLocation, 1, GL_FALSE, glm::value_ptr(view));
+	glUniform3fv(uniformEyePositionLocation, 1, glm::value_ptr(glm::vec3(view[3])));
 }
 
 void PhongLightShader::setTransform(const glm::mat4& transform) const
 {
 	glUniformMatrix4fv(uniformTransformLocation, 1, GL_FALSE, glm::value_ptr(transform));
+}
+
+void PhongLightShader::setEye(const glm::vec3& eye)
+{
+	glUniform3fv(uniformEyePositionLocation, 1, glm::value_ptr(eye));
 }
 
 void PhongLightShader::setAmbientColor(const glm::vec3& ambientColor)
@@ -151,6 +159,7 @@ void PhongLightShader::useMaterial(const Material* material) const
 		glUniform3fv(uniformMaterial.ambientColorLocation, 1, glm::value_ptr(material->getAmbientColor()));
 		glUniform3fv(uniformMaterial.diffuseColorLocation, 1, glm::value_ptr(material->getDiffuseColor()));
 		glUniform3fv(uniformMaterial.specularColorLocation, 1, glm::value_ptr(material->getSpecularColor()));
+		glUniform1f(uniformMaterial.specularPowerLocation, material->getSpecularPower());
 
 		auto* texture = material->getTexture();
 		if (texture)

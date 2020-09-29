@@ -44,6 +44,7 @@ struct UniformMaterial
 	GLuint ambientColorLocation;
 	GLuint diffuseColorLocation;
 	GLuint specularColorLocation;
+	GLuint specularPowerLocation;
 };
 
 class PhongLightShader : public Shader
@@ -54,6 +55,7 @@ public:
 	void setProjection(const glm::mat4& projection) const;
 	void setView(const glm::mat4& view) const;
 	void setTransform(const glm::mat4& transform) const;
+	void setEye(const glm::vec3& eye);
 	void setAmbientColor(const glm::vec3& ambientColor);
 	void setDirectionalLights(const std::vector<Light>& directionalLights);
 	void setPointLights(const std::vector<Light>& pointLights);
@@ -75,6 +77,7 @@ private:
 	GLuint uniformProjectionLocation;
 	GLuint uniformViewLocation;
 	GLuint uniformTransformLocation;
+	GLuint uniformEyePositionLocation;
 	GLuint uniformAmbientColorLocation;
 	GLuint uniformDiffuseTextureLocation;
 	std::array<UniformDirectionalLight, MAX_DIRECTIONAL_LIGHTS> uniformDirectionalLights;

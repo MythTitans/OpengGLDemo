@@ -136,6 +136,8 @@ std::vector<std::unique_ptr<Material>> Model::loadMaterials(const aiScene* scene
 		material->Get(AI_MATKEY_COLOR_DIFFUSE, diffuseColor);
 		aiColor3D specularColor;
 		material->Get(AI_MATKEY_COLOR_SPECULAR, specularColor);
+		ai_real specularPower;
+		material->Get(AI_MATKEY_SHININESS, specularPower);
 
 		std::unique_ptr<Texture> texture;
 		if (material->GetTextureCount(aiTextureType_DIFFUSE) != 0)
@@ -152,7 +154,7 @@ std::vector<std::unique_ptr<Material>> Model::loadMaterials(const aiScene* scene
 			return { color.r, color.g, color.b };
 		};
 
-		materials[i] = std::make_unique<Material>(colorToGlm(ambientColor), colorToGlm(diffuseColor), colorToGlm(specularColor), std::move(texture));
+		materials[i] = std::make_unique<Material>(colorToGlm(ambientColor), colorToGlm(diffuseColor), colorToGlm(specularColor), specularPower, std::move(texture));
 	}
 
 	return materials;

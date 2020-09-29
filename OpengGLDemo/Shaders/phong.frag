@@ -15,6 +15,7 @@ struct Material
 	vec3 ambientColor;
 	vec3 diffuseColor;
 	vec3 specularColor;
+	float specularPower;
 };
 
 struct Light
@@ -45,6 +46,8 @@ struct SpotLight
 	float edge;
 };
 
+uniform vec3 eyePosition;
+
 uniform vec3 ambientColor;
 
 uniform DirectionalLight directionalLights[MAX_DIRECTIONAL_LIGHTS];
@@ -58,10 +61,32 @@ uniform Material material;
 
 uniform sampler2D diffuseTexture;
 
+vec3 computeAmbientColor()
+{
+	return ambientColor * material.ambientColor;
+}
+
+vec3 computeLightColor(vec3 lightDirection, float lightIntensity, vec3 lightColor)
+{
+	 float diffuseFactor = clamp(dot(-lightDirection, normal), 0.0, 1.0);
+	 float specularFactor = 0.0;
+	 if(diffuseFactor > 0.0)
+	 {
+		vec3 eyeDirection = normalize(position - eyePosition);
+		vec3 reflectedEyeDirection = reflect(eyeDirection, normal);
+		specularFactor = clamp(dot(-lightDirection, reflectedEyeDirection), 0.0, 1.0);
+		if(specularFactor > 0.0)
+		{
+			specularFactor = pow(specularFactor, material.specularPower);
+		}
+	 }
+
+	 return lightIntensity * lightColor * (diffuseFactor * material.diffuseColor + specularFactor * material.specularColor);
+}
+
 vec3 computeDirectionalLight(DirectionalLight light)
 {
-	float factor = clamp(dot(-light.direction, normal), 0.0, 1.0);
-	return factor * light.base.intensity * light.base.color;
+	return computeLightColor(light.direction, light.base.intensity, light.base.color);
 }
 
 vec3 computeDirectionalLights()
@@ -84,8 +109,7 @@ vec3 computePointLight(PointLight light)
 	lightDirection = normalize(lightDirection);
 
 	float attenuation = light.constantAttenuation + light.linearAttenuation * distance + light.quadricAttenuation * distance * distance;
-	float factor = clamp(dot(-lightDirection, normal), 0.0, 1.0) / attenuation;
-	return factor * light.base.intensity * light.base.color;
+	return computeLightColor(lightDirection, light.base.intensity, light.base.color) / attenuation;
 }
 
 vec3 computePointLights()
@@ -131,8 +155,9 @@ vec3 computeSpotLights()
 
 void main()
 {
+	vec3 ambientColor = computeAmbientColor();
 	vec3 lightColor = computeDirectionalLights() + computePointLights() + computeSpotLights();
 
-	vec3 color = (ambientColor * material.ambientColor + lightColor * material.diffuseColor) * texture(diffuseTexture, texCoords).xyz;
+	vec3 color = (ambientColor + lightColor) * texture(diffuseTexture, texCoords).xyz;
 	finalColor = vec4(color, 1);
 }

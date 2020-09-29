@@ -7,7 +7,7 @@
 
 #include <glm/glm.hpp>
 
-inline void log(const std::string& log)
+inline void log_line(const std::string& log)
 {
 	std::cout << log << std::endl;
 }

@@ -37,6 +37,7 @@ void RenderSystem::render(const Scene& scene, const Camera& camera) const
 	phongLightShader->use();
 	phongLightShader->setProjection(camera.getProjection());
 	phongLightShader->setView(camera.getView());
+	phongLightShader->setEye(camera.getPosition());
 	phongLightShader->setAmbientColor(scene.getAmbientColor());
 	phongLightShader->setDirectionalLights(scene.getDirectionalLights());
 	phongLightShader->setPointLights(scene.getPointLights());
