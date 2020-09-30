@@ -45,6 +45,7 @@ struct UniformMaterial
 	GLuint diffuseColorLocation;
 	GLuint specularColorLocation;
 	GLuint specularPowerLocation;
+	GLuint diffuseMapLocation;
 };
 
 class PhongLightShader : public Shader
@@ -74,12 +75,13 @@ private:
 	static constexpr int MAX_POINT_LIGHTS = 12;
 	static constexpr int MAX_SPOT_LIGHTS = 8;
 
+	std::unique_ptr<Texture> dummyTexture;
+
 	GLuint uniformProjectionLocation;
 	GLuint uniformViewLocation;
 	GLuint uniformTransformLocation;
 	GLuint uniformEyePositionLocation;
 	GLuint uniformAmbientColorLocation;
-	GLuint uniformDiffuseTextureLocation;
 	std::array<UniformDirectionalLight, MAX_DIRECTIONAL_LIGHTS> uniformDirectionalLights;
 	std::array<UniformPointLight, MAX_POINT_LIGHTS> uniformPointLights;
 	std::array<UniformSpotLight, MAX_SPOT_LIGHTS> uniformSpotLights;

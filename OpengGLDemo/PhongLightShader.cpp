@@ -7,12 +7,12 @@
 
 PhongLightShader::PhongLightShader() :
 	Shader{ readFileContent("Shaders/phong.vert"), readFileContent("Shaders/phong.frag") },
+	dummyTexture{ Texture::loadTexture("Textures/dummy.png") },
 	uniformProjectionLocation{ getUniformLocation("projection") },
 	uniformViewLocation{ getUniformLocation("view") },
 	uniformTransformLocation{ getUniformLocation("model") },
 	uniformEyePositionLocation{ getUniformLocation("eyePosition") },
 	uniformAmbientColorLocation{ getUniformLocation("ambientColor") },
-	uniformDiffuseTextureLocation{ getUniformLocation("diffuseTexture") },
 	uniformDirectionLightCount{ getUniformLocation("directionalLightCount") },
 	uniformPointLightCount{ getUniformLocation("pointLightCount") },
 	uniformSpotLightCount{ getUniformLocation("spotLightCount") }
@@ -56,6 +56,7 @@ PhongLightShader::PhongLightShader() :
 	uniformMaterial.diffuseColorLocation = getUniformLocation("material.diffuseColor");
 	uniformMaterial.specularColorLocation = getUniformLocation("material.specularColor");
 	uniformMaterial.specularPowerLocation = getUniformLocation("material.specularPower");
+	uniformMaterial.diffuseMapLocation = getUniformLocation("material.diffuseMap");
 }
 
 void PhongLightShader::setProjection(const glm::mat4& projection) const
@@ -166,8 +167,12 @@ void PhongLightShader::useMaterial(const Material* material) const
 		{
 			texture->use();
 		}
+		else
+		{
+			dummyTexture->use();
+		}
 
-		glUniform1i(uniformDiffuseTextureLocation, 0);
+		glUniform1i(uniformMaterial.diffuseMapLocation, 0);
 	}
 }
 

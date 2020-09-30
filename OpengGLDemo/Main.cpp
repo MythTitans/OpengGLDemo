@@ -26,15 +26,24 @@ int main(void)
 
 		auto ground = createGround(50.0f);
 		auto model = Model::loadModel("Models/model.obj");
+		auto gladiatorModel = Model::loadModel("Models/gladiator.obj");
+		auto sphereModel = Model::loadModel("Models/sphere.obj");
 
 		Entity entity1{ model.get() };
 		entity1.setPitch(-90.0f);
-		entity1.setPosition({ 0.0f, 3.0f, 0.0f });
+		entity1.setPosition({ -10.0f, 3.0f, 0.0f });
 
 		Entity entity2{ entity1 };
-		entity2.setRoll(90.0f);
 		entity2.setPosition({ 10.0f, 3.0f, 0.0f });
 		entity2.setScale({ 0.5f, 0.5f, 0.5f });
+
+		Entity gladiator{ gladiatorModel.get() };
+		gladiator.setScale({ 2.0f, 2.0f, 2.0f });
+		gladiator.setYaw(180.0f);
+
+		//Entity sphere{ sphereModel.get() };
+		//sphere.setPosition({ 4.0f, 0.5f, 0.0f });
+		//sphere.setScale({ 0.5f, 0.5f, 0.5f });
 
 		Entity groundEntity{ ground.get() };
 
@@ -42,6 +51,8 @@ int main(void)
 		scene.setAmbientColor({ 0.1f, 0.1f, 0.1f });
 		scene.addEntity(entity1);
 		scene.addEntity(entity2);
+		scene.addEntity(gladiator);
+		//scene.addEntity(sphere);
 		scene.addEntity(groundEntity);
 		scene.addLight(Light::directionalLight(0.3f, { 1.0f, 0.89f, 0.8f }, { 1.0f, -1.0f, 1.0f }));
 		scene.addLight(Light::pointLight(1.0f, { 0.0f, 1.0f, 0.0f }, { 5.0f, 3.0f, 0.0f }, 0.3f, 0.2f, 0.1f));
