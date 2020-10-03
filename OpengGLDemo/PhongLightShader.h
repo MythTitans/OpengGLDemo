@@ -47,6 +47,7 @@ struct UniformMaterial
 	GLuint specularPowerLocation;
 	GLuint diffuseMapLocation;
 	GLuint normalMapLocation;
+	GLuint opacityLocation;
 };
 
 class PhongLightShader : public Shader

@@ -104,7 +104,7 @@ std::unique_ptr<Model> createGround(float size)
 	glm::vec3 fullWhite{ 1.0f, 1.0f, 1.0f };
 
 	auto texture = Texture::loadTexture("Textures/dirt.png");
-	auto material = std::make_unique<Material>(fullWhite, fullWhite, fullWhite, 100.0f, std::move(texture), nullptr);
+	auto material = std::make_unique<Material>(fullWhite, fullWhite, fullWhite, 100.0f, std::move(texture), nullptr, 1.0f);
 	auto plane = std::make_unique<Mesh>(std::move(vertices), std::move(indices), material.get());
 
 	std::vector<std::unique_ptr<Mesh>> meshes{ 1 };

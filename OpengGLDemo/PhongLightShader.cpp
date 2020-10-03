@@ -59,6 +59,7 @@ PhongLightShader::PhongLightShader() :
 	uniformMaterial.specularPowerLocation = getUniformLocation("material.specularPower");
 	uniformMaterial.diffuseMapLocation = getUniformLocation("material.diffuseMap");
 	uniformMaterial.normalMapLocation = getUniformLocation("material.normalMap");
+	uniformMaterial.opacityLocation = getUniformLocation("material.opacity");
 }
 
 void PhongLightShader::setProjection(const glm::mat4& projection) const
@@ -163,6 +164,7 @@ void PhongLightShader::useMaterial(const Material* material) const
 		glUniform3fv(uniformMaterial.diffuseColorLocation, 1, glm::value_ptr(material->getDiffuseColor()));
 		glUniform3fv(uniformMaterial.specularColorLocation, 1, glm::value_ptr(material->getSpecularColor()));
 		glUniform1f(uniformMaterial.specularPowerLocation, material->getSpecularPower());
+		glUniform1f(uniformMaterial.opacityLocation, material->getOpacity());
 
 		auto* texture = material->getDiffuseMap();
 		if (texture)

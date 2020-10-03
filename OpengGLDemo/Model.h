@@ -22,11 +22,28 @@ public:
 
 	static std::unique_ptr<Model> loadModel(std::filesystem::path filePath);
 
-	void render(const Shader& shader) const;
+	inline const std::vector<const Mesh*>& getOpaqueMeshes() const
+	{
+		return opaqueMeshes;
+	}
+
+	inline const std::vector<const Mesh*>& getTransparentMeshes() const
+	{
+		return transparentMeshes;
+	}
+
+	inline const bool hasTransparentMeshes() const
+	{
+		return transparentMeshes.size() > 0;
+	}
 
 private:
 	std::vector<std::unique_ptr<Mesh>> meshes;
 	std::vector<std::unique_ptr<Material>> materials;
+	std::vector<const Mesh*> opaqueMeshes;
+	std::vector<const Mesh*> transparentMeshes;
+
+	void filterTransparentMeshes();
 
 	static std::vector<std::unique_ptr<Mesh>> loadMeshes(aiNode* node, const aiScene* scene, const std::vector<std::unique_ptr<Material>>& materials);
 	static std::unique_ptr<Mesh> loadMesh(aiMesh* mesh, const std::vector<std::unique_ptr<Material>>& materials);

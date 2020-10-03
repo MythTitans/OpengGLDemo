@@ -5,7 +5,8 @@
 
 #include <GL/glew.h>
 
-class Material;
+#include "Material.h"
+
 class Shader;
 
 class Mesh
@@ -19,6 +20,11 @@ public:
 	~Mesh();
 
 	void render(const Shader& shader) const;
+
+	inline bool isTransparent() const
+	{
+		return material ? material->isTransparent() : false;
+	}
 
 	static constexpr int VERTEX_COMPONENTS = 14;
 
