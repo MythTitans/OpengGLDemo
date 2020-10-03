@@ -7,6 +7,8 @@ const int MAX_SPOT_LIGHTS = 8;
 in vec3 position;
 in vec2 texCoords;
 in vec3 normal;
+in vec3 binormal;
+in vec3 tangent;
 
 out vec4 finalColor;
 
@@ -17,6 +19,7 @@ struct Material
 	vec3 specularColor;
 	float specularPower;
 	sampler2D diffuseMap;
+	sampler2D normalMap;
 };
 
 struct Light
@@ -67,7 +70,11 @@ vec3 computeAmbientColor()
 
 vec3 computeLightColor(vec3 lightDirection, float lightIntensity, vec3 lightColor)
 {
-	vec3 realNormal = normalize(normal);
+	mat3 matTBN = mat3(normalize(tangent), normalize(binormal), normalize(normal));
+	vec3 extractedNormal = texture(material.normalMap, texCoords).xyz;
+	extractedNormal = normalize(2 * (extractedNormal - 0.5));
+
+	vec3 realNormal = matTBN * extractedNormal;
 	float diffuseFactor = clamp(dot(-lightDirection, realNormal), 0.0, 1.0);
 	float specularFactor = 0.0;
 	if(diffuseFactor > 0.0)

@@ -27,7 +27,7 @@ std::unique_ptr<Model> Model::loadModel(std::filesystem::path filePath)
 {
 	Assimp::Importer importer;
 
-	auto* scene = importer.ReadFile(filePath.string(), aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices);
+	auto* scene = importer.ReadFile(filePath.string(), aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices | aiProcess_CalcTangentSpace);
 	if (!scene)
 	{
 		throw std::runtime_error("Failed to load model " + filePath.string());
@@ -98,6 +98,16 @@ std::unique_ptr<Mesh> Model::loadMesh(aiMesh* mesh, const std::vector<std::uniqu
 		vertices[VERTEX_COMPONENTS * i + 5] = normal.x;
 		vertices[VERTEX_COMPONENTS * i + 6] = normal.y;
 		vertices[VERTEX_COMPONENTS * i + 7] = normal.z;
+
+		auto binormal = mesh->mBitangents[i];
+		vertices[VERTEX_COMPONENTS * i + 8] = binormal.x;
+		vertices[VERTEX_COMPONENTS * i + 9] = binormal.y;
+		vertices[VERTEX_COMPONENTS * i + 10] = binormal.z;
+
+		auto tangent = mesh->mTangents[i];
+		vertices[VERTEX_COMPONENTS * i + 11] = tangent.x;
+		vertices[VERTEX_COMPONENTS * i + 12] = tangent.y;
+		vertices[VERTEX_COMPONENTS * i + 13] = tangent.z;
 	}
 
 	size_t faceCount = mesh->mNumFaces;
@@ -139,14 +149,25 @@ std::vector<std::unique_ptr<Material>> Model::loadMaterials(const aiScene* scene
 		ai_real specularPower;
 		material->Get(AI_MATKEY_SHININESS, specularPower);
 
-		std::unique_ptr<Texture> texture;
+		std::unique_ptr<Texture> diffuseMap;
 		if (material->GetTextureCount(aiTextureType_DIFFUSE) != 0)
 		{
 			aiString file;
 			if (material->GetTexture(aiTextureType_DIFFUSE, 0, &file) == AI_SUCCESS)
 			{
 				std::filesystem::path filePath{ file.C_Str() };
-				texture = Texture::loadTexture("Textures" / filePath.filename());
+				diffuseMap = Texture::loadTexture("Textures" / filePath.filename());
+			}
+		}
+
+		std::unique_ptr<Texture> normalMap;
+		if (material->GetTextureCount(aiTextureType_NORMALS) != 0)
+		{
+			aiString file;
+			if (material->GetTexture(aiTextureType_NORMALS, 0, &file) == AI_SUCCESS)
+			{
+				std::filesystem::path filePath{ file.C_Str() };
+				normalMap = Texture::loadTexture("Textures" / filePath.filename());
 			}
 		}
 
@@ -154,7 +175,7 @@ std::vector<std::unique_ptr<Material>> Model::loadMaterials(const aiScene* scene
 			return { color.r, color.g, color.b };
 		};
 
-		materials[i] = std::make_unique<Material>(colorToGlm(ambientColor), colorToGlm(diffuseColor), colorToGlm(specularColor), specularPower, std::move(texture));
+		materials[i] = std::make_unique<Material>(colorToGlm(ambientColor), colorToGlm(diffuseColor), colorToGlm(specularColor), specularPower, std::move(diffuseMap), std::move(normalMap));
 	}
 
 	return materials;

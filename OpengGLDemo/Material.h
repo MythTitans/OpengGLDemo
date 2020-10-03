@@ -7,7 +7,7 @@
 class Material
 {
 public:
-	Material(glm::vec3 ambientColor, glm::vec3 diffuseColor, glm::vec3 specularColor, float specularPower, std::unique_ptr<Texture> texture);
+	Material(glm::vec3 ambientColor, glm::vec3 diffuseColor, glm::vec3 specularColor, float specularPower, std::unique_ptr<Texture> diffuseMap, std::unique_ptr<Texture> normalMap);
 
 	inline const glm::vec3& getAmbientColor() const
 	{
@@ -29,9 +29,14 @@ public:
 		return specularPower;
 	}
 
-	inline const Texture* getTexture() const
+	inline const Texture* getDiffuseMap() const
 	{
-		return texture.get();
+		return diffuseMap.get();
+	}
+
+	inline const Texture* getNormalMap() const
+	{
+		return normalMap.get();
 	}
 
 private:
@@ -39,6 +44,7 @@ private:
 	glm::vec3 diffuseColor;
 	glm::vec3 specularColor;
 	float specularPower;
-	std::unique_ptr<Texture> texture;
+	std::unique_ptr<Texture> diffuseMap;
+	std::unique_ptr<Texture> normalMap;
 };
 

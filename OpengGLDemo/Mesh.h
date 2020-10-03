@@ -20,6 +20,8 @@ public:
 
 	void render(const Shader& shader) const;
 
+	static constexpr int VERTEX_COMPONENTS = 14;
+
 private:
 	GLuint vao;
 	GLuint vbo;

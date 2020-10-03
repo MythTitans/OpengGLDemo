@@ -32,7 +32,6 @@ private:
 	static std::unique_ptr<Mesh> loadMesh(aiMesh* mesh, const std::vector<std::unique_ptr<Material>>& materials);
 	static std::vector<std::unique_ptr<Material>> loadMaterials(const aiScene* scene);
 
-	// TODO should be a Mesh constant
-	static constexpr int VERTEX_COMPONENTS = 8;
+	static constexpr int VERTEX_COMPONENTS = Mesh::VERTEX_COMPONENTS;
 };
 
