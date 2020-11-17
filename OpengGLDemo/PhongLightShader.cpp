@@ -7,8 +7,9 @@
 
 PhongLightShader::PhongLightShader() :
 	Shader{ readFileContent("Shaders/phong.vert"), readFileContent("Shaders/phong.frag") },
-	dummyTexture{ Texture::loadTexture("Textures/dummy.png") },
+	dummyDiffuse{ Texture::loadTexture("Textures/dummy.png") },
 	dummyNormal{Texture::loadTexture("Textures/dummy_normal.png")},
+	dummySpecular{ Texture::loadTexture("Textures/dummy.png") },
 	uniformProjectionLocation{ getUniformLocation("projection") },
 	uniformViewLocation{ getUniformLocation("view") },
 	uniformTransformLocation{ getUniformLocation("model") },
@@ -59,6 +60,7 @@ PhongLightShader::PhongLightShader() :
 	uniformMaterial.specularPowerLocation = getUniformLocation("material.specularPower");
 	uniformMaterial.diffuseMapLocation = getUniformLocation("material.diffuseMap");
 	uniformMaterial.normalMapLocation = getUniformLocation("material.normalMap");
+	uniformMaterial.specularMapLocation = getUniformLocation("material.specularMap");
 	uniformMaterial.opacityLocation = getUniformLocation("material.opacity");
 }
 
@@ -176,7 +178,7 @@ void PhongLightShader::useMaterial(const Material* material) const
 		{
 			// TODO try to remove this an check if texture is provided in shader instead
 			glActiveTexture(GL_TEXTURE0);
-			dummyTexture->use();
+			dummyDiffuse->use();
 		}
 
 		texture = material->getNormalMap();
@@ -191,8 +193,21 @@ void PhongLightShader::useMaterial(const Material* material) const
 			dummyNormal->use();
 		}
 
+		texture = material->getSpecularMap();
+		if (texture)
+		{
+			glActiveTexture(GL_TEXTURE2);
+			texture->use();
+		}
+		else
+		{
+			glActiveTexture(GL_TEXTURE2);
+			dummySpecular->use();
+		}
+
 		glUniform1i(uniformMaterial.diffuseMapLocation, 0);
 		glUniform1i(uniformMaterial.normalMapLocation, 1);
+		glUniform1i(uniformMaterial.specularMapLocation, 2);
 	}
 }
 
@@ -201,6 +216,18 @@ void PhongLightShader::unuseMaterial(const Material* material) const
 	if (material)
 	{
 		auto* texture = material->getDiffuseMap();
+		if (texture)
+		{
+			texture->unuse();
+		}
+
+		texture = material->getNormalMap();
+		if (texture)
+		{
+			texture->unuse();
+		}
+
+		texture = material->getSpecularMap();
 		if (texture)
 		{
 			texture->unuse();

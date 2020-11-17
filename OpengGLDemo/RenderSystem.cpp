@@ -25,7 +25,6 @@ RenderSystem::RenderSystem(const Window& window)
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glClearColor(0.25f, 0.25f, 0.25f, 1);
 
@@ -73,6 +72,7 @@ void RenderSystem::render(const Scene& scene, const Camera& camera) const
 	std::sort(transparentEntities.begin(), transparentEntities.end(), frontToBack);
 
 	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	for (const auto* entity : transparentEntities)
 	{

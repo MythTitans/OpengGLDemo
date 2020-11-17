@@ -20,6 +20,7 @@ struct Material
 	float specularPower;
 	sampler2D diffuseMap;
 	sampler2D normalMap;
+	sampler2D specularMap;
 	float opacity;
 };
 
@@ -85,7 +86,7 @@ vec3 computeLightColor(vec3 lightDirection, float lightIntensity, vec3 lightColo
 		specularFactor = clamp(dot(-lightDirection, reflectedEyeDirection), 0.0, 1.0);
 		if(specularFactor > 0.0)
 		{
-			specularFactor = pow(specularFactor, material.specularPower);
+			specularFactor = pow(specularFactor, material.specularPower) * texture(material.specularMap, texCoords).x;
 		}
 	}
 

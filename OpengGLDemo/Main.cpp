@@ -42,7 +42,7 @@ int main(void)
 		gladiator.setYaw(180.0f);
 
 		Entity sphere{ sphereModel.get() };
-		sphere.setPosition({ 0.0f, 0.5f, 0.0f });
+		sphere.setPosition({ 2.0f, 0.5f, 0.0f });
 
 		Entity groundEntity{ ground.get() };
 
@@ -51,9 +51,9 @@ int main(void)
 		scene.addEntity(entity1);
 		scene.addEntity(entity2);
 		scene.addEntity(gladiator);
-		//scene.addEntity(sphere);
+		scene.addEntity(sphere);
 		scene.addEntity(groundEntity);
-		scene.addLight(Light::directionalLight(1.0f, { 1.0f, 0.89f, 0.8f }, { 1.0f, -1.0f, 1.0f }));
+		scene.addLight(Light::directionalLight(1.0f, { 1.0f, 1.0f, 1.0f }, { 1.0f, -1.0f, 1.0f }));
 		scene.addLight(Light::pointLight(2.0f, { 1.0f, 0.25f, 0.25f }, { 5.0f, 3.0f, 0.0f }, 0.3f, 0.2f, 0.1f));
 		//scene.addLight(Light::spotLight(1.0f, { 1.0f, 0.0f, 1.0f }, { -5.0f, 3.0f, 0.0f }, { 2.0f, -1.0f, 0.0f }, 0.1f, 0.1f, 0.1f, glm::radians(90.0f)));
 		scene.addLight(Light::pointLight(2.0f, { 0.25f, 0.25f, 1.0f }, { -5.0f, 3.0f, 0.0f }, 0.3f, 0.2f, 0.1f));
@@ -104,7 +104,7 @@ std::unique_ptr<Model> createGround(float size)
 	glm::vec3 fullWhite{ 1.0f, 1.0f, 1.0f };
 
 	auto texture = Texture::loadTexture("Textures/dirt.png");
-	auto material = std::make_unique<Material>(fullWhite, fullWhite, fullWhite, 100.0f, std::move(texture), nullptr, 1.0f);
+	auto material = std::make_unique<Material>(fullWhite, fullWhite, fullWhite, 100.0f, std::move(texture), nullptr, nullptr, 1.0f);
 	auto plane = std::make_unique<Mesh>(std::move(vertices), std::move(indices), material.get());
 
 	std::vector<std::unique_ptr<Mesh>> meshes{ 1 };

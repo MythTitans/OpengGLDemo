@@ -47,6 +47,7 @@ struct UniformMaterial
 	GLuint specularPowerLocation;
 	GLuint diffuseMapLocation;
 	GLuint normalMapLocation;
+	GLuint specularMapLocation;
 	GLuint opacityLocation;
 };
 
@@ -77,8 +78,9 @@ private:
 	static constexpr int MAX_POINT_LIGHTS = 12;
 	static constexpr int MAX_SPOT_LIGHTS = 8;
 
-	std::unique_ptr<Texture> dummyTexture;
+	std::unique_ptr<Texture> dummyDiffuse;
 	std::unique_ptr<Texture> dummyNormal;
+	std::unique_ptr<Texture> dummySpecular;
 
 	GLuint uniformProjectionLocation;
 	GLuint uniformViewLocation;
