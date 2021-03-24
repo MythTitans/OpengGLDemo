@@ -1,6 +1,5 @@
 #include "Texture.h"
 
-#define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
 Texture::Texture(unsigned char* data, int width, int height, bool alpha)

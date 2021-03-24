@@ -6,7 +6,7 @@
 #include "Material.h"
 
 PhongLightShader::PhongLightShader() :
-	Shader{ readFileContent("Shaders/phong.vert"), readFileContent("Shaders/phong.frag") },
+	MaterialShader{ readFileContent("Shaders/phong.vert"), readFileContent("Shaders/phong.frag") },
 	dummyDiffuse{ Texture::loadTexture("Textures/dummy.png") },
 	dummyNormal{Texture::loadTexture("Textures/dummy_normal.png")},
 	dummySpecular{ Texture::loadTexture("Textures/dummy.png") },

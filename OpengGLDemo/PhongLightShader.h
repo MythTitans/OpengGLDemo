@@ -5,7 +5,7 @@
 #include <glm/glm.hpp>
 #include <gl/glew.h>
 
-#include "Shader.h"
+#include "MaterialShader.h"
 #include "Light.h"
 
 class ResourceLoader;
@@ -51,7 +51,7 @@ struct UniformMaterial
 	GLuint opacityLocation;
 };
 
-class PhongLightShader : public Shader
+class PhongLightShader : public MaterialShader
 {
 public:
 	PhongLightShader();
@@ -66,12 +66,6 @@ public:
 	void setSpotLights(const std::vector<Light>& spotLights);
 	void useMaterial(const Material* material) const override;
 	void unuseMaterial(const Material* material) const override;
-
-private:
-	inline GLuint getUniformLocation(const std::string& name) const
-	{
-		return glGetUniformLocation(programId, name.c_str());
-	}
 
 private:
 	static constexpr int MAX_DIRECTIONAL_LIGHTS = 4;

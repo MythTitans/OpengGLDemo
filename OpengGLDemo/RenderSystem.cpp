@@ -29,11 +29,20 @@ RenderSystem::RenderSystem(const Window& window)
 	glClearColor(0.25f, 0.25f, 0.25f, 1);
 
 	phongLightShader = std::make_unique<PhongLightShader>();
+	skyboxShader = std::make_unique<SkyboxShader>();
 }
 
 void RenderSystem::render(const Scene& scene, const Camera& camera) const
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	skyboxShader->use();
+	skyboxShader->setProjection(camera.getProjection());
+	skyboxShader->setView(camera.getView());
+
+	scene.getSkybox().render(*skyboxShader);
+
+	skyboxShader->unuse();
 
 	phongLightShader->use();
 	phongLightShader->setProjection(camera.getProjection());

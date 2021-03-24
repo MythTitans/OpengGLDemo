@@ -1,6 +1,6 @@
 #include "Scene.h"
 
-Scene::Scene() : ambientColor{0, 0, 0}
+Scene::Scene(std::unique_ptr<CubeMap> skyboxMap) : ambientColor{ 0, 0, 0 }, skybox{ std::move(skyboxMap) }
 {
 }
 

@@ -20,8 +20,11 @@ public:
 	void use() const;
 	void unuse() const;
 
-	virtual void useMaterial(const Material* material) const = 0;
-	virtual void unuseMaterial(const Material* material) const = 0;
+protected:
+	inline GLuint getUniformLocation(const std::string& name) const
+	{
+		return glGetUniformLocation(programId, name.c_str());
+	}
 
 protected:
 	GLuint programId;

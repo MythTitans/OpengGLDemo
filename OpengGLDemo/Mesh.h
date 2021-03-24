@@ -6,6 +6,7 @@
 #include <GL/glew.h>
 
 #include "Material.h"
+#include "MaterialShader.h"
 
 class Shader;
 
@@ -19,7 +20,8 @@ public:
 	Mesh& operator=(Mesh&& reference) noexcept;
 	~Mesh();
 
-	void render(const Shader& shader) const;
+	void render() const;
+	void render(const MaterialShader& shader) const;
 
 	inline bool isTransparent() const
 	{

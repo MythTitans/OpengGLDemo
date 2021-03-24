@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "PhongLightShader.h"
+#include "SkyboxShader.h"
 
 class Window;
 class Camera;
@@ -17,5 +18,6 @@ public:
 
 private:
 	std::unique_ptr<PhongLightShader> phongLightShader;
+	std::unique_ptr<SkyboxShader> skyboxShader;
 };
 

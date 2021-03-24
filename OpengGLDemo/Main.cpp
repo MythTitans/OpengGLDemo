@@ -3,6 +3,9 @@
 #include <chrono>
 #include <thread>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
 #include "Common.h"
 #include "Window.h"
 #include "Camera.h"
@@ -12,6 +15,7 @@
 #include "Scene.h"
 #include "Model.h"
 #include "Light.h"
+#include "CubeMap.h"
 
 std::unique_ptr<Model> createGround(float size);
 
@@ -46,7 +50,16 @@ int main(void)
 
 		Entity groundEntity{ ground.get() };
 
-		Scene scene;
+		std::array<std::filesystem::path, 6> skyboxFaces = {
+			"Textures/bluecloud_rt.jpg",
+			"Textures/bluecloud_lf.jpg",
+			"Textures/bluecloud_up.jpg",
+			"Textures/bluecloud_dn.jpg",
+			"Textures/bluecloud_bk.jpg",
+			"Textures/bluecloud_ft.jpg"
+		};
+
+		Scene scene{ CubeMap::loadCubeMap(skyboxFaces) };
 		scene.setAmbientColor({ 0.1f, 0.1f, 0.1f });
 		scene.addEntity(entity1);
 		scene.addEntity(entity2);

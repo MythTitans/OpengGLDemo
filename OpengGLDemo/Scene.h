@@ -4,11 +4,12 @@
 
 #include "Entity.h"
 #include "Light.h"
+#include "Skybox.h"
 
 class Scene
 {
 public:
-	Scene();
+	Scene(std::unique_ptr<CubeMap> skyboxMap);
 
 	void addEntity(Entity entity);
 	void addLight(Light light);
@@ -36,10 +37,16 @@ public:
 		return spotLights;
 	}
 
+	inline const Skybox& getSkybox() const
+	{
+		return skybox;
+	}
+
 private:
 	std::vector<Entity> entities;
 	std::vector<Light> directionalLights;
 	std::vector<Light> pointLights;
 	std::vector<Light> spotLights;
 	glm::vec3 ambientColor;
+	Skybox skybox;
 };

@@ -75,13 +75,16 @@ Mesh::~Mesh()
 	glDeleteVertexArrays(1, &vao);
 }
 
-void Mesh::render(const Shader& shader) const
+void Mesh::render() const
 {
-	shader.useMaterial(material);
-
 	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
 	glBindVertexArray(0);
+}
 
+void Mesh::render(const MaterialShader& shader) const
+{
+	shader.useMaterial(material);
+	render();
 	shader.unuseMaterial(material);
 }
