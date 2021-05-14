@@ -12,7 +12,7 @@
 #include "Entity.h"
 #include "Model.h"
 
-RenderSystem::RenderSystem(const Window& window)
+RenderSystem::RenderSystem(const Window& window) : displayWidth{ window.getFramebufferWidth() }, displayHeight{ window.getFramebufferHeight() }
 {
 	glewExperimental = GL_TRUE;
 
@@ -21,8 +21,6 @@ RenderSystem::RenderSystem(const Window& window)
 		throw std::runtime_error("Error initializing GLEW !");
 	}
 
-	glViewport(0, 0, window.getFramebufferWidth(), window.getFramebufferHeight());
-
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 
@@ -30,10 +28,15 @@ RenderSystem::RenderSystem(const Window& window)
 
 	phongLightShader = std::make_unique<PhongLightShader>();
 	skyboxShader = std::make_unique<SkyboxShader>();
+	directionalShadowMapShader = std::make_unique<DirectionalShadowMapShader>();
 }
 
 void RenderSystem::render(const Scene& scene, const Camera& camera) const
 {
+	computeDirectionalShadowMaps(scene);
+
+	glViewport(0, 0, displayWidth, displayHeight);
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	skyboxShader->use();
@@ -49,7 +52,7 @@ void RenderSystem::render(const Scene& scene, const Camera& camera) const
 	phongLightShader->setView(camera.getView());
 	phongLightShader->setEye(camera.getPosition());
 	phongLightShader->setAmbientColor(scene.getAmbientColor());
-	phongLightShader->setDirectionalLights(scene.getDirectionalLights());
+	phongLightShader->setDirectionalLights(scene.getDirectionalLights(), scene.getDirectionalLightShadowMaps());
 	phongLightShader->setPointLights(scene.getPointLights());
 	phongLightShader->setSpotLights(scene.getSpotLights());
 
@@ -99,4 +102,40 @@ void RenderSystem::render(const Scene& scene, const Camera& camera) const
 	glDisable(GL_BLEND);
 
 	phongLightShader->unuse();
+}
+
+void RenderSystem::computeDirectionalShadowMaps(const Scene& scene) const
+{
+	directionalShadowMapShader->use();
+	
+	for (int i = 0; i < scene.getDirectionalLights().size(); ++i)
+	{
+		const auto& light = scene.getDirectionalLights()[i];
+		const auto& shadowMap = scene.getDirectionalLightShadowMaps()[i];
+	
+		glViewport(0, 0, shadowMap.getWidth(), shadowMap.getHeight());
+
+		shadowMap.useTarget();
+
+		glClear(GL_DEPTH_BUFFER_BIT);
+
+		directionalShadowMapShader->setLightTransform(light.computeLightTransform()[0]);
+
+		for (const auto& entity : scene.getEntities())
+		{
+			directionalShadowMapShader->setTransform(entity.computeTransform());
+			auto* model = entity.getModel();
+			if (model)
+			{
+				for (const auto* mesh : model->getOpaqueMeshes())
+				{
+					mesh->render();
+				}
+			}
+		}
+
+		shadowMap.unuseTarget();
+	}
+
+	directionalShadowMapShader->unuse();
 }

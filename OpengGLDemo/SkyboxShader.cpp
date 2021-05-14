@@ -24,8 +24,7 @@ void SkyboxShader::setView(const glm::mat4& view) const
 
 void SkyboxShader::useSkyboxMap(const CubeMap* skyboxMap) const
 {
-	glActiveTexture(GL_TEXTURE0);
-	skyboxMap->use();
+	skyboxMap->use(0);
 	glUniform1i(uniformCubeMapLocation, 0);
 }
 

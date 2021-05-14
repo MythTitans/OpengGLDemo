@@ -1,5 +1,7 @@
 #include "Scene.h"
 
+static const int SHADOW_MAP_SIZE = 512;
+
 Scene::Scene(std::unique_ptr<CubeMap> skyboxMap) : ambientColor{ 0, 0, 0 }, skybox{ std::move(skyboxMap) }
 {
 }
@@ -15,6 +17,7 @@ void Scene::addLight(Light light)
 	{
 	case Light::Type::DIRECTIONAL_LIGHT:
 		directionalLights.push_back(light);
+		directionalLightShadowMaps.push_back(ShadowMap{ SHADOW_MAP_SIZE, SHADOW_MAP_SIZE });
 		break;
 
 	case Light::Type::POINT_LIGHT:

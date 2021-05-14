@@ -17,7 +17,8 @@ PhongLightShader::PhongLightShader() :
 	uniformAmbientColorLocation{ getUniformLocation("ambientColor") },
 	uniformDirectionLightCount{ getUniformLocation("directionalLightCount") },
 	uniformPointLightCount{ getUniformLocation("pointLightCount") },
-	uniformSpotLightCount{ getUniformLocation("spotLightCount") }
+	uniformSpotLightCount{ getUniformLocation("spotLightCount") },
+	ambientColor{}
 {
 	char buffer[128];
 	auto indexedLocation = [&buffer](const std::string& location, int index) {
@@ -30,6 +31,8 @@ PhongLightShader::PhongLightShader() :
 		uniformDirectionalLights[i].intensityLocation = getUniformLocation(indexedLocation("directionalLights[%d].base.intensity", i));
 		uniformDirectionalLights[i].colorLocation = getUniformLocation(indexedLocation("directionalLights[%d].base.color", i));
 		uniformDirectionalLights[i].directionLocation = getUniformLocation(indexedLocation("directionalLights[%d].direction", i));
+		uniformDirectionalLightTransformLocations[i] = getUniformLocation(indexedLocation("directionalLightTransform[%d]", i));
+		uniformDirectionalLightShadowMapLocations[i] = getUniformLocation(indexedLocation("directionalLightShadowMap[%d]", i));
 	}
 
 	for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
@@ -90,7 +93,7 @@ void PhongLightShader::setAmbientColor(const glm::vec3& ambientColor)
 	glUniform3fv(uniformAmbientColorLocation, 1, glm::value_ptr(ambientColor));
 }
 
-void PhongLightShader::setDirectionalLights(const std::vector<Light>& directionalLights)
+void PhongLightShader::setDirectionalLights(const std::vector<Light>& directionalLights, const std::vector<ShadowMap>& directionalLightShadowMaps)
 {
 	if (directionalLights.size() > MAX_DIRECTIONAL_LIGHTS)
 	{
@@ -107,6 +110,11 @@ void PhongLightShader::setDirectionalLights(const std::vector<Light>& directiona
 		glUniform1f(uniformLight.intensityLocation, light.getIntensity());
 		glUniform3fv(uniformLight.colorLocation, 1, glm::value_ptr(light.getColor()));
 		glUniform3fv(uniformLight.directionLocation, 1, glm::value_ptr(light.getDirection()));
+		glUniformMatrix4fv(uniformDirectionalLightTransformLocations[i], 1, GL_FALSE, glm::value_ptr(light.computeLightTransform()[0]));
+
+		size_t textureUnit = 3 + i;
+		directionalLightShadowMaps[i].use(textureUnit);
+		glUniform1i(uniformDirectionalLightShadowMapLocations[i], textureUnit);
 	}
 }
 
@@ -171,38 +179,32 @@ void PhongLightShader::useMaterial(const Material* material) const
 		auto* texture = material->getDiffuseMap();
 		if (texture)
 		{
-			glActiveTexture(GL_TEXTURE0);
-			texture->use();
+			texture->use(0);
 		}
 		else
 		{
 			// TODO try to remove this an check if texture is provided in shader instead
-			glActiveTexture(GL_TEXTURE0);
-			dummyDiffuse->use();
+			dummyDiffuse->use(0);
 		}
 
 		texture = material->getNormalMap();
 		if (texture)
 		{
-			glActiveTexture(GL_TEXTURE1);
-			texture->use();
+			texture->use(1);
 		}
 		else
 		{
-			glActiveTexture(GL_TEXTURE1);
-			dummyNormal->use();
+			dummyNormal->use(1);
 		}
 
 		texture = material->getSpecularMap();
 		if (texture)
 		{
-			glActiveTexture(GL_TEXTURE2);
-			texture->use();
+			texture->use(2);
 		}
 		else
 		{
-			glActiveTexture(GL_TEXTURE2);
-			dummySpecular->use();
+			dummySpecular->use(2);
 		}
 
 		glUniform1i(uniformMaterial.diffuseMapLocation, 0);

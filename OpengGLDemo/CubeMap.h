@@ -18,7 +18,7 @@ public:
 
 	static std::unique_ptr<CubeMap> loadCubeMap(std::array<std::filesystem::path, 6> filePaths);
 
-	void use() const;
+	void use(unsigned int textureUnit) const;
 	void unuse() const;
 
 private:

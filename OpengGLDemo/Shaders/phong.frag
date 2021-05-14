@@ -9,6 +9,7 @@ in vec2 texCoords;
 in vec3 normal;
 in vec3 binormal;
 in vec3 tangent;
+in vec4 directionalLightSpacePos[4];
 
 out vec4 finalColor;
 
@@ -59,6 +60,7 @@ uniform vec3 ambientColor;
 uniform DirectionalLight directionalLights[MAX_DIRECTIONAL_LIGHTS];
 uniform PointLight pointLights[MAX_POINT_LIGHTS];
 uniform SpotLight spotLights[MAX_SPOT_LIGHTS];
+uniform sampler2D directionalLightShadowMaps[MAX_DIRECTIONAL_LIGHTS];
 uniform int directionalLightCount;
 uniform int pointLightCount;
 uniform int spotLightCount;
@@ -93,9 +95,24 @@ vec3 computeLightColor(vec3 lightDirection, float lightIntensity, vec3 lightColo
 	return lightIntensity * lightColor * (diffuseFactor * material.diffuseColor + specularFactor * material.specularColor);
 }
 
-vec3 computeDirectionalLight(DirectionalLight light)
+float computeDirectionalShadowFactor(DirectionalLight light, sampler2D directionalLightShadowMap, vec4 directionalLightSpacePos)
 {
-	return computeLightColor(light.direction, light.base.intensity, light.base.color);
+	vec3 projectedCoords = directionalLightSpacePos.xyz / directionalLightSpacePos.w;
+	projectedCoords = projectedCoords * 0.5 + 0.5;
+
+	float currentDepth = projectedCoords.z;
+	float bias = 0.01;
+
+	float depth = texture(directionalLightShadowMap, projectedCoords.xy).r;
+
+	return currentDepth - bias > depth ? 1.0 : 0.0;
+}
+
+vec3 computeDirectionalLight(DirectionalLight light, sampler2D directionalLightShadowMap, vec4 directionalLightSpacePos)
+{
+	float shadowFactor = computeDirectionalShadowFactor(light, directionalLightShadowMap, directionalLightSpacePos);
+	//return (1 - shadowFactor) * computeLightColor(light.direction, light.base.intensity, light.base.color);
+	return vec3(shadowFactor, shadowFactor, shadowFactor);
 }
 
 vec3 computeDirectionalLights()
@@ -104,8 +121,7 @@ vec3 computeDirectionalLights()
 
 	for(int i = 0; i < directionalLightCount; ++i)
 	{
-		DirectionalLight light = directionalLights[i];
-		lightColor += computeDirectionalLight(light);
+		lightColor += computeDirectionalLight(directionalLights[i], directionalLightShadowMaps[i], directionalLightSpacePos[i]);
 	}
 
 	return lightColor;

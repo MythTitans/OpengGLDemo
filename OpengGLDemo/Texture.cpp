@@ -71,8 +71,9 @@ std::unique_ptr<Texture> Texture::loadTexture(std::filesystem::path filePath)
 	return texture;
 }
 
-void Texture::use() const
+void Texture::use(unsigned int textureUnit) const
 {
+	glActiveTexture(GL_TEXTURE0 + textureUnit);
 	glBindTexture(GL_TEXTURE_2D, textureId);
 }
 

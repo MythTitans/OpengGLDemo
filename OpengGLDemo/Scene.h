@@ -5,6 +5,7 @@
 #include "Entity.h"
 #include "Light.h"
 #include "Skybox.h"
+#include "ShadowMap.h"
 
 class Scene
 {
@@ -37,6 +38,11 @@ public:
 		return spotLights;
 	}
 
+	inline const std::vector<ShadowMap>& getDirectionalLightShadowMaps() const
+	{
+		return directionalLightShadowMaps;
+	}
+
 	inline const Skybox& getSkybox() const
 	{
 		return skybox;
@@ -47,6 +53,7 @@ private:
 	std::vector<Light> directionalLights;
 	std::vector<Light> pointLights;
 	std::vector<Light> spotLights;
+	std::vector<ShadowMap> directionalLightShadowMaps;
 	glm::vec3 ambientColor;
 	Skybox skybox;
 };

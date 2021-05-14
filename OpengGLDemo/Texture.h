@@ -17,7 +17,7 @@ public:
 
 	static std::unique_ptr<Texture> loadTexture(std::filesystem::path filePath);
 
-	void use() const;
+	void use(unsigned int textureUnit) const;
 	void unuse() const;
 
 private:

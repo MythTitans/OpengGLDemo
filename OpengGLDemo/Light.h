@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include <glm/glm.hpp>
 
 class Light
@@ -16,7 +18,7 @@ public:
 	static Light pointLight(float intensity, glm::vec3 color, glm::vec3 position, float constantAttenuation, float linearAttenuation, float quadricAttenuation);
 	static Light spotLight(float intensity, glm::vec3 color, glm::vec3 position, glm::vec3 direction, float constantAttenuation, float linearAttenuation, float quadricAttenuation, float angle);
 
-	Light(Type type, float intensity, glm::vec3 color);
+	std::vector<glm::mat4> computeLightTransform() const;
 
 	inline void setPosition(glm::vec3 position)
 	{
@@ -110,6 +112,9 @@ public:
 	}
 
 private:
+	Light(Type type, float intensity, glm::vec3 color, glm::mat4 lightProjection);
+
+private:
 	Type type;
 	glm::vec3 position;
 	glm::vec3 direction;
@@ -120,4 +125,5 @@ private:
 	float quadricAttenuation;
 	float angle;
 	float edge;
+	glm::mat4 lightProjection;
 };

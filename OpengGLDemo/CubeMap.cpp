@@ -68,8 +68,9 @@ std::unique_ptr<CubeMap> CubeMap::loadCubeMap(std::array<std::filesystem::path, 
 	return texture;
 }
 
-void CubeMap::use() const
+void CubeMap::use(unsigned int textureUnit) const
 {
+	glActiveTexture(GL_TEXTURE0 + textureUnit);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, textureId);
 }
 

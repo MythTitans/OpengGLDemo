@@ -7,6 +7,7 @@
 
 #include "MaterialShader.h"
 #include "Light.h"
+#include "ShadowMap.h"
 
 class ResourceLoader;
 
@@ -61,7 +62,7 @@ public:
 	void setTransform(const glm::mat4& transform) const;
 	void setEye(const glm::vec3& eye);
 	void setAmbientColor(const glm::vec3& ambientColor);
-	void setDirectionalLights(const std::vector<Light>& directionalLights);
+	void setDirectionalLights(const std::vector<Light>& directionalLights, const std::vector<ShadowMap>& directionalLightShadowMaps);
 	void setPointLights(const std::vector<Light>& pointLights);
 	void setSpotLights(const std::vector<Light>& spotLights);
 	void useMaterial(const Material* material) const override;
@@ -79,11 +80,13 @@ private:
 	GLuint uniformProjectionLocation;
 	GLuint uniformViewLocation;
 	GLuint uniformTransformLocation;
+	std::array<GLuint, MAX_DIRECTIONAL_LIGHTS> uniformDirectionalLightTransformLocations;
 	GLuint uniformEyePositionLocation;
 	GLuint uniformAmbientColorLocation;
 	std::array<UniformDirectionalLight, MAX_DIRECTIONAL_LIGHTS> uniformDirectionalLights;
 	std::array<UniformPointLight, MAX_POINT_LIGHTS> uniformPointLights;
 	std::array<UniformSpotLight, MAX_SPOT_LIGHTS> uniformSpotLights;
+	std::array<GLuint, MAX_DIRECTIONAL_LIGHTS> uniformDirectionalLightShadowMapLocations;
 	GLuint uniformDirectionLightCount;
 	GLuint uniformPointLightCount;
 	GLuint uniformSpotLightCount;
