@@ -66,7 +66,7 @@ int main(void)
 		scene.addEntity(gladiator);
 		scene.addEntity(sphere);
 		scene.addEntity(groundEntity);
-		scene.addLight(Light::directionalLight(1.0f, { 1.0f, 1.0f, 1.0f }, { 1.0f, -1.0f, 1.0f }));
+		scene.addLight(Light::directionalLight(1.0f, { 1.0f, 1.0f, 1.0f }, { -10.0f, 10.0f, -10.0f }, { 1.0f, -1.0f, 1.0f }));
 		scene.addLight(Light::pointLight(2.0f, { 1.0f, 0.25f, 0.25f }, { 5.0f, 3.0f, 0.0f }, 0.3f, 0.2f, 0.1f));
 		//scene.addLight(Light::spotLight(1.0f, { 1.0f, 0.0f, 1.0f }, { -5.0f, 3.0f, 0.0f }, { 2.0f, -1.0f, 0.0f }, 0.1f, 0.1f, 0.1f, glm::radians(90.0f)));
 		scene.addLight(Light::pointLight(2.0f, { 0.25f, 0.25f, 1.0f }, { -5.0f, 3.0f, 0.0f }, 0.3f, 0.2f, 0.1f));

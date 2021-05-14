@@ -6,9 +6,10 @@ Light::Light(Type type, float intensity, glm::vec3 color, glm::mat4 lightProject
 {
 }
 
-Light Light::directionalLight(float intensity, glm::vec3 color, glm::vec3 direction)
+Light Light::directionalLight(float intensity, glm::vec3 color, glm::vec3 position, glm::vec3 direction)
 {
-	Light light{ Type::DIRECTIONAL_LIGHT, intensity, color, glm::ortho(-5.0f, 5.0f, -5.0f, 5.0f, 0.1f, 100.0f) };
+	Light light{ Type::DIRECTIONAL_LIGHT, intensity, color, glm::ortho(-20.0f, 20.0f, -20.0f, 20.0f, 0.1f, 100.0f) };
+	light.setPosition(position);
 	light.setDirection(direction);
 
 	return light;
@@ -41,7 +42,7 @@ Light Light::spotLight(float intensity, glm::vec3 color, glm::vec3 position, glm
 std::vector<glm::mat4> Light::computeLightTransform() const
 {
 	if (type == Type::DIRECTIONAL_LIGHT) {
-		return { lightProjection * glm::lookAt(-direction, {0, 0, 0}, {0, 1, 0}) };
+		return { lightProjection * glm::lookAt(position, position + direction, {0, 1, 0}) };
 	}
 
 	return {};

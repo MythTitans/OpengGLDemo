@@ -101,18 +101,34 @@ float computeDirectionalShadowFactor(DirectionalLight light, sampler2D direction
 	projectedCoords = projectedCoords * 0.5 + 0.5;
 
 	float currentDepth = projectedCoords.z;
-	float bias = 0.01;
 
-	float depth = texture(directionalLightShadowMap, projectedCoords.xy).r;
+	float bias = 0.001;
+	
+	float shadow = 0.0;
+	vec2 texelSize = 1.0 / textureSize(directionalLightShadowMap, 0);
+	for(int i = -1; i <= 1; ++i)
+	{
+		for(int j = -1; j <= 1; ++j)
+		{
+			float pcfDepth = texture(directionalLightShadowMap, projectedCoords.xy - vec2(i, j) * texelSize).r;
+			shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
+		}
+	}
 
-	return currentDepth - bias > depth ? 1.0 : 0.0;
+	shadow /= 9;
+
+	if(currentDepth >= 1.0)
+	{
+		shadow = 0.0;
+	}
+
+	return shadow;
 }
 
 vec3 computeDirectionalLight(DirectionalLight light, sampler2D directionalLightShadowMap, vec4 directionalLightSpacePos)
 {
 	float shadowFactor = computeDirectionalShadowFactor(light, directionalLightShadowMap, directionalLightSpacePos);
-	//return (1 - shadowFactor) * computeLightColor(light.direction, light.base.intensity, light.base.color);
-	return vec3(shadowFactor, shadowFactor, shadowFactor);
+	return (1 - shadowFactor) * computeLightColor(light.direction, light.base.intensity, light.base.color);
 }
 
 vec3 computeDirectionalLights()

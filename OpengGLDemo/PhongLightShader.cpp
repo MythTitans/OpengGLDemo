@@ -32,7 +32,7 @@ PhongLightShader::PhongLightShader() :
 		uniformDirectionalLights[i].colorLocation = getUniformLocation(indexedLocation("directionalLights[%d].base.color", i));
 		uniformDirectionalLights[i].directionLocation = getUniformLocation(indexedLocation("directionalLights[%d].direction", i));
 		uniformDirectionalLightTransformLocations[i] = getUniformLocation(indexedLocation("directionalLightTransform[%d]", i));
-		uniformDirectionalLightShadowMapLocations[i] = getUniformLocation(indexedLocation("directionalLightShadowMap[%d]", i));
+		uniformDirectionalLightShadowMapLocations[i] = getUniformLocation(indexedLocation("directionalLightShadowMaps[%d]", i));
 	}
 
 	for (int i = 0; i < MAX_POINT_LIGHTS; ++i)

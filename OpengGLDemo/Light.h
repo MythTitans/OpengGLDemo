@@ -14,7 +14,7 @@ public:
 		SPOT_LIGHT
 	};
 
-	static Light directionalLight(float intensity, glm::vec3 color, glm::vec3 direction);
+	static Light directionalLight(float intensity, glm::vec3 color, glm::vec3 position, glm::vec3 direction);
 	static Light pointLight(float intensity, glm::vec3 color, glm::vec3 position, float constantAttenuation, float linearAttenuation, float quadricAttenuation);
 	static Light spotLight(float intensity, glm::vec3 color, glm::vec3 position, glm::vec3 direction, float constantAttenuation, float linearAttenuation, float quadricAttenuation, float angle);
 

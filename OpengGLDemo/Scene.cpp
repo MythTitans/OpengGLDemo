@@ -1,6 +1,6 @@
 #include "Scene.h"
 
-static const int SHADOW_MAP_SIZE = 512;
+static const int SHADOW_MAP_SIZE = 2048;
 
 Scene::Scene(std::unique_ptr<CubeMap> skyboxMap) : ambientColor{ 0, 0, 0 }, skybox{ std::move(skyboxMap) }
 {
