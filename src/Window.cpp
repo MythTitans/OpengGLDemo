@@ -4,9 +4,9 @@
 
 #include "include/InputHandler.h"
 
-void handleKeys(GLFWwindow* window, int key, int code, int action, int mode)
+void handleKeys(GLFWwindow *window, int key, int code, int action, int mode)
 {
-    InputHandler* inputHandler = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
+    InputHandler *inputHandler = static_cast<InputHandler *>(glfwGetWindowUserPointer(window));
 
     if (inputHandler)
     {
@@ -21,9 +21,9 @@ void handleKeys(GLFWwindow* window, int key, int code, int action, int mode)
     }
 }
 
-void handleMouse(GLFWwindow* window, double x, double y)
+void handleMouse(GLFWwindow *window, double x, double y)
 {
-    InputHandler* inputHandler = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
+    InputHandler *inputHandler = static_cast<InputHandler *>(glfwGetWindowUserPointer(window));
 
     if (inputHandler)
     {
@@ -31,7 +31,7 @@ void handleMouse(GLFWwindow* window, double x, double y)
     }
 }
 
-Window::Window(unsigned int width, unsigned int height, const std::string& title)
+Window::Window(unsigned int width, unsigned int height, const std::string &title)
 {
     if (!glfwInit())
     {
@@ -70,7 +70,7 @@ Window::~Window()
     glfwTerminate();
 }
 
-void Window::registerInputHandler(InputHandler* inputHandler) const
+void Window::registerInputHandler(InputHandler *inputHandler) const
 {
     glfwSetWindowUserPointer(window, inputHandler);
 }

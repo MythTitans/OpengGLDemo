@@ -7,11 +7,11 @@
 
 class Skybox
 {
-public:
-	Skybox(std::unique_ptr<CubeMap> skyboxMap);
-	void render(const SkyboxShader& skyboxShader) const;
+  public:
+    Skybox(std::unique_ptr<CubeMap> skyboxMap);
+    void render(const SkyboxShader &skyboxShader) const;
 
-private:
-	std::unique_ptr<CubeMap> skyboxMap;
-	Mesh skyboxMesh;
+  private:
+    std::unique_ptr<CubeMap> skyboxMap;
+    Mesh skyboxMesh;
 };

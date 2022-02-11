@@ -1,100 +1,100 @@
 #include "include/Shader.h"
 
-#include <stdexcept>
 #include <fstream>
+#include <stdexcept>
 
 #include <GL/gl.h>
 
-Shader::Shader(const std::string& vertexShaderCode, const std::string& fragmentShaderCode)
+Shader::Shader(const std::string &vertexShaderCode, const std::string &fragmentShaderCode)
 {
-	programId = glCreateProgram();
+    programId = glCreateProgram();
 
-	compile(vertexShaderCode, GL_VERTEX_SHADER);
-	compile(fragmentShaderCode, GL_FRAGMENT_SHADER);
+    compile(vertexShaderCode, GL_VERTEX_SHADER);
+    compile(fragmentShaderCode, GL_FRAGMENT_SHADER);
 
-	link();
+    link();
 }
 
-Shader::Shader(Shader&& reference) noexcept : programId{ reference.programId }
+Shader::Shader(Shader &&reference) noexcept : programId{reference.programId}
 {
-	reference.programId = 0;
+    reference.programId = 0;
 }
 
-Shader& Shader::operator=(Shader&& reference) noexcept
+Shader &Shader::operator=(Shader &&reference) noexcept
 {
-	if (this != &reference)
-	{
-		this->programId = reference.programId;
-		reference.programId = 0;
-	}
+    if (this != &reference)
+    {
+        this->programId = reference.programId;
+        reference.programId = 0;
+    }
 
-	return *this;
+    return *this;
 }
 
 Shader::~Shader()
 {
-	glDeleteProgram(programId);
+    glDeleteProgram(programId);
 }
 
 void Shader::use() const
 {
-	glUseProgram(programId);
+    glUseProgram(programId);
 }
 
 void Shader::unuse() const
 {
-	glUseProgram(0);
+    glUseProgram(0);
 }
 
-void Shader::compile(const std::string& shaderCode, GLenum shaderType) const
+void Shader::compile(const std::string &shaderCode, GLenum shaderType) const
 {
-	GLuint vertexShaderId = glCreateShader(shaderType);
+    GLuint vertexShaderId = glCreateShader(shaderType);
 
-	const GLchar* code[1];
-	code[0] = shaderCode.c_str();
+    const GLchar *code[1];
+    code[0] = shaderCode.c_str();
 
-	GLint codeLength[1];
-	codeLength[0] = (GLint) shaderCode.length();
+    GLint codeLength[1];
+    codeLength[0] = (GLint)shaderCode.length();
 
-	glShaderSource(vertexShaderId, 1, code, codeLength);
-	glCompileShader(vertexShaderId);
+    glShaderSource(vertexShaderId, 1, code, codeLength);
+    glCompileShader(vertexShaderId);
 
-	GLint compileResult;
-	glGetShaderiv(vertexShaderId, GL_COMPILE_STATUS, &compileResult);
+    GLint compileResult;
+    glGetShaderiv(vertexShaderId, GL_COMPILE_STATUS, &compileResult);
 
-	if (!compileResult)
-	{
-		GLint compileLogLength;
-		glGetShaderiv(vertexShaderId, GL_INFO_LOG_LENGTH, &compileLogLength);
+    if (!compileResult)
+    {
+        GLint compileLogLength;
+        glGetShaderiv(vertexShaderId, GL_INFO_LOG_LENGTH, &compileLogLength);
 
-		std::string compileLog;
-		compileLog.resize(compileLogLength);
+        std::string compileLog;
+        compileLog.resize(compileLogLength);
 
-		glGetShaderInfoLog(vertexShaderId, compileLogLength, &compileLogLength, &compileLog[0]);
+        glGetShaderInfoLog(vertexShaderId, compileLogLength, &compileLogLength, &compileLog[0]);
 
-		throw std::runtime_error("Error compiling shader [" + compileLog + "]");
-	}
+        throw std::runtime_error("Error compiling shader [" + compileLog + "]");
+    }
 
-	glAttachShader(programId, vertexShaderId);
+    glAttachShader(programId, vertexShaderId);
 }
 
 void Shader::link() const
 {
-	glLinkProgram(programId);
+    glLinkProgram(programId);
 
-	GLint linkResult;
-	glGetProgramiv(programId, GL_LINK_STATUS, &linkResult);
+    GLint linkResult;
+    glGetProgramiv(programId, GL_LINK_STATUS, &linkResult);
 
-	if (!linkResult)
-	{
-		GLint linkLogLength;
-		glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &linkLogLength);
+    if (!linkResult)
+    {
+        GLint linkLogLength;
+        glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &linkLogLength);
 
-		std::string linkLog;
-		linkLog.resize(linkLogLength);
+        std::string linkLog;
+        linkLog.resize(linkLogLength);
 
-		glGetProgramInfoLog(programId, linkLogLength, &linkLogLength, &linkLog[0]);
+        glGetProgramInfoLog(programId, linkLogLength, &linkLogLength, &linkLog[0]);
 
-		throw std::runtime_error("Error linking shader [" + linkLog + "]");
-	}
+        throw std::runtime_error("Error linking shader [" + linkLog + "]");
+    }
 }

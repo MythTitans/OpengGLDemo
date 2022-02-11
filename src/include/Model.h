@@ -1,54 +1,53 @@
 #pragma once
 
-#include <vector>
-#include <memory>
 #include <filesystem>
+#include <memory>
+#include <vector>
 
-#include <assimp/scene.h>
 #include <assimp/mesh.h>
+#include <assimp/scene.h>
 
 #include "Mesh.h"
-#include "Texture.h"
 #include "Shader.h"
+#include "Texture.h"
 
 class Model
 {
-public:
-	Model(std::vector<std::unique_ptr<Mesh>>&& meshes, std::vector<std::unique_ptr<Material>>&& materials);
-	Model(const Model&) = delete;
-	Model& operator=(const Model&) = delete;
-	Model(Model&& reference) noexcept;
-	Model& operator=(Model&& reference) noexcept;
+  public:
+    Model(std::vector<std::unique_ptr<Mesh>> &&meshes, std::vector<std::unique_ptr<Material>> &&materials);
+    Model(const Model &) = delete;
+    Model &operator=(const Model &) = delete;
+    Model(Model &&reference) noexcept;
+    Model &operator=(Model &&reference) noexcept;
 
-	static std::unique_ptr<Model> loadModel(std::filesystem::path filePath);
+    static std::unique_ptr<Model> loadModel(std::filesystem::path filePath);
 
-	inline const std::vector<const Mesh*>& getOpaqueMeshes() const
-	{
-		return opaqueMeshes;
-	}
+    inline const std::vector<const Mesh *> &getOpaqueMeshes() const
+    {
+        return opaqueMeshes;
+    }
 
-	inline const std::vector<const Mesh*>& getTransparentMeshes() const
-	{
-		return transparentMeshes;
-	}
+    inline const std::vector<const Mesh *> &getTransparentMeshes() const
+    {
+        return transparentMeshes;
+    }
 
-	inline const bool hasTransparentMeshes() const
-	{
-		return transparentMeshes.size() > 0;
-	}
+    inline const bool hasTransparentMeshes() const
+    {
+        return transparentMeshes.size() > 0;
+    }
 
-private:
-	std::vector<std::unique_ptr<Mesh>> meshes;
-	std::vector<std::unique_ptr<Material>> materials;
-	std::vector<const Mesh*> opaqueMeshes;
-	std::vector<const Mesh*> transparentMeshes;
+  private:
+    std::vector<std::unique_ptr<Mesh>> meshes;
+    std::vector<std::unique_ptr<Material>> materials;
+    std::vector<const Mesh *> opaqueMeshes;
+    std::vector<const Mesh *> transparentMeshes;
 
-	void filterTransparentMeshes();
+    void filterTransparentMeshes();
 
-	static std::vector<std::unique_ptr<Mesh>> loadMeshes(aiNode* node, const aiScene* scene, const std::vector<std::unique_ptr<Material>>& materials);
-	static std::unique_ptr<Mesh> loadMesh(aiMesh* mesh, const std::vector<std::unique_ptr<Material>>& materials);
-	static std::vector<std::unique_ptr<Material>> loadMaterials(const aiScene* scene);
+    static std::vector<std::unique_ptr<Mesh>> loadMeshes(aiNode *node, const aiScene *scene, const std::vector<std::unique_ptr<Material>> &materials);
+    static std::unique_ptr<Mesh> loadMesh(aiMesh *mesh, const std::vector<std::unique_ptr<Material>> &materials);
+    static std::vector<std::unique_ptr<Material>> loadMaterials(const aiScene *scene);
 
-	static constexpr int VERTEX_COMPONENTS = Mesh::VERTEX_COMPONENTS;
+    static constexpr int VERTEX_COMPONENTS = Mesh::VERTEX_COMPONENTS;
 };
-
