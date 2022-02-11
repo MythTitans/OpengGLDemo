@@ -30,12 +30,12 @@ void Scene::addLight(Light light)
     }
 }
 
-void Scene::setAmbientColor(const glm::vec3 &ambientColor)
+void Scene::setAmbientColor(const glm::vec3& ambientColor)
 {
     this->ambientColor = ambientColor;
 }
 
-const glm::vec3 &Scene::getAmbientColor() const
+const glm::vec3& Scene::getAmbientColor() const
 {
     return ambientColor;
 }

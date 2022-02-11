@@ -39,7 +39,7 @@ class Entity
         this->scale = scale;
     }
 
-    inline const glm::vec3 &getPosition() const
+    inline const glm::vec3& getPosition() const
     {
         return position;
     }
@@ -59,12 +59,12 @@ class Entity
         return roll;
     }
 
-    inline const glm::vec3 &getScale() const
+    inline const glm::vec3& getScale() const
     {
         return scale;
     }
 
-    inline const Model *getModel() const
+    inline const Model* getModel() const
     {
         return model.get();
     }

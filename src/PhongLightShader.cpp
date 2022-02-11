@@ -21,7 +21,7 @@ PhongLightShader::PhongLightShader()
       ambientColor{}
 {
     char buffer[128];
-    auto indexedLocation = [&buffer](const std::string &location, int index)
+    auto indexedLocation = [&buffer](const std::string& location, int index)
     {
         snprintf(buffer, 128, location.c_str(), index);
         return buffer;
@@ -68,33 +68,33 @@ PhongLightShader::PhongLightShader()
     uniformMaterial.opacityLocation = getUniformLocation("material.opacity");
 }
 
-void PhongLightShader::setProjection(const glm::mat4 &projection) const
+void PhongLightShader::setProjection(const glm::mat4& projection) const
 {
     glUniformMatrix4fv(uniformProjectionLocation, 1, GL_FALSE, glm::value_ptr(projection));
 }
 
-void PhongLightShader::setView(const glm::mat4 &view) const
+void PhongLightShader::setView(const glm::mat4& view) const
 {
     glUniformMatrix4fv(uniformViewLocation, 1, GL_FALSE, glm::value_ptr(view));
     glUniform3fv(uniformEyePositionLocation, 1, glm::value_ptr(glm::vec3(view[3])));
 }
 
-void PhongLightShader::setTransform(const glm::mat4 &transform) const
+void PhongLightShader::setTransform(const glm::mat4& transform) const
 {
     glUniformMatrix4fv(uniformTransformLocation, 1, GL_FALSE, glm::value_ptr(transform));
 }
 
-void PhongLightShader::setEye(const glm::vec3 &eye)
+void PhongLightShader::setEye(const glm::vec3& eye)
 {
     glUniform3fv(uniformEyePositionLocation, 1, glm::value_ptr(eye));
 }
 
-void PhongLightShader::setAmbientColor(const glm::vec3 &ambientColor)
+void PhongLightShader::setAmbientColor(const glm::vec3& ambientColor)
 {
     glUniform3fv(uniformAmbientColorLocation, 1, glm::value_ptr(ambientColor));
 }
 
-void PhongLightShader::setDirectionalLights(const std::vector<Light> &directionalLights, const std::vector<ShadowMap> &directionalLightShadowMaps)
+void PhongLightShader::setDirectionalLights(const std::vector<Light>& directionalLights, const std::vector<ShadowMap>& directionalLightShadowMaps)
 {
     if (directionalLights.size() > MAX_DIRECTIONAL_LIGHTS)
     {
@@ -105,8 +105,8 @@ void PhongLightShader::setDirectionalLights(const std::vector<Light> &directiona
 
     for (size_t i = 0; i < directionalLights.size(); ++i)
     {
-        const Light &light = directionalLights[i];
-        UniformDirectionalLight &uniformLight = uniformDirectionalLights[i];
+        const Light& light = directionalLights[i];
+        UniformDirectionalLight& uniformLight = uniformDirectionalLights[i];
 
         glUniform1f(uniformLight.intensityLocation, light.getIntensity());
         glUniform3fv(uniformLight.colorLocation, 1, glm::value_ptr(light.getColor()));
@@ -119,7 +119,7 @@ void PhongLightShader::setDirectionalLights(const std::vector<Light> &directiona
     }
 }
 
-void PhongLightShader::setPointLights(const std::vector<Light> &pointLights)
+void PhongLightShader::setPointLights(const std::vector<Light>& pointLights)
 {
     if (pointLights.size() > MAX_POINT_LIGHTS)
     {
@@ -130,7 +130,7 @@ void PhongLightShader::setPointLights(const std::vector<Light> &pointLights)
 
     for (size_t i = 0; i < pointLights.size(); ++i)
     {
-        const Light &light = pointLights[i];
+        const Light& light = pointLights[i];
         UniformPointLight uniformLight = uniformPointLights[i];
 
         glUniform1f(uniformLight.intensityLocation, light.getIntensity());
@@ -142,7 +142,7 @@ void PhongLightShader::setPointLights(const std::vector<Light> &pointLights)
     }
 }
 
-void PhongLightShader::setSpotLights(const std::vector<Light> &spotLights)
+void PhongLightShader::setSpotLights(const std::vector<Light>& spotLights)
 {
     if (spotLights.size() >= MAX_SPOT_LIGHTS)
     {
@@ -153,7 +153,7 @@ void PhongLightShader::setSpotLights(const std::vector<Light> &spotLights)
 
     for (int i = 0; i < (int)spotLights.size(); ++i)
     {
-        const Light &light = spotLights[i];
+        const Light& light = spotLights[i];
         UniformSpotLight uniformLight = uniformSpotLights[i];
 
         glUniform1f(uniformLight.intensityLocation, light.getIntensity());
@@ -167,7 +167,7 @@ void PhongLightShader::setSpotLights(const std::vector<Light> &spotLights)
     }
 }
 
-void PhongLightShader::useMaterial(const Material *material) const
+void PhongLightShader::useMaterial(const Material* material) const
 {
     if (material)
     {
@@ -177,7 +177,7 @@ void PhongLightShader::useMaterial(const Material *material) const
         glUniform1f(uniformMaterial.specularPowerLocation, material->getSpecularPower());
         glUniform1f(uniformMaterial.opacityLocation, material->getOpacity());
 
-        auto *texture = material->getDiffuseMap();
+        auto* texture = material->getDiffuseMap();
         if (texture)
         {
             texture->use(0);
@@ -214,11 +214,11 @@ void PhongLightShader::useMaterial(const Material *material) const
     }
 }
 
-void PhongLightShader::unuseMaterial(const Material *material) const
+void PhongLightShader::unuseMaterial(const Material* material) const
 {
     if (material)
     {
-        auto *texture = material->getDiffuseMap();
+        auto* texture = material->getDiffuseMap();
         if (texture)
         {
             texture->unuse();

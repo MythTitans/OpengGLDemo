@@ -14,36 +14,36 @@ class Scene
 
     void addEntity(Entity entity);
     void addLight(Light light);
-    void setAmbientColor(const glm::vec3 &ambientColor);
+    void setAmbientColor(const glm::vec3& ambientColor);
 
-    const glm::vec3 &getAmbientColor() const;
+    const glm::vec3& getAmbientColor() const;
 
-    inline const std::vector<Entity> &getEntities() const
+    inline const std::vector<Entity>& getEntities() const
     {
         return entities;
     }
 
-    inline const std::vector<Light> &getDirectionalLights() const
+    inline const std::vector<Light>& getDirectionalLights() const
     {
         return directionalLights;
     }
 
-    inline const std::vector<Light> &getPointLights() const
+    inline const std::vector<Light>& getPointLights() const
     {
         return pointLights;
     }
 
-    inline const std::vector<Light> &getSpotLights() const
+    inline const std::vector<Light>& getSpotLights() const
     {
         return spotLights;
     }
 
-    inline const std::vector<ShadowMap> &getDirectionalLightShadowMaps() const
+    inline const std::vector<ShadowMap>& getDirectionalLightShadowMaps() const
     {
         return directionalLightShadowMaps;
     }
 
-    inline const Skybox &getSkybox() const
+    inline const Skybox& getSkybox() const
     {
         return skybox;
     }

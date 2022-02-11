@@ -12,7 +12,7 @@
 #include "include/Scene.h"
 #include "include/Window.h"
 
-RenderSystem::RenderSystem(const Window &window) : displayWidth{window.getFramebufferWidth()}, displayHeight{window.getFramebufferHeight()}
+RenderSystem::RenderSystem(const Window& window) : displayWidth{window.getFramebufferWidth()}, displayHeight{window.getFramebufferHeight()}
 {
     glewExperimental = GL_TRUE;
 
@@ -31,7 +31,7 @@ RenderSystem::RenderSystem(const Window &window) : displayWidth{window.getFrameb
     directionalShadowMapShader = std::make_unique<DirectionalShadowMapShader>();
 }
 
-void RenderSystem::render(const Scene &scene, const Camera &camera) const
+void RenderSystem::render(const Scene& scene, const Camera& camera) const
 {
     computeDirectionalShadowMaps(scene);
 
@@ -56,14 +56,14 @@ void RenderSystem::render(const Scene &scene, const Camera &camera) const
     phongLightShader->setPointLights(scene.getPointLights());
     phongLightShader->setSpotLights(scene.getSpotLights());
 
-    std::vector<const Entity *> transparentEntities;
-    for (const auto &entity : scene.getEntities())
+    std::vector<const Entity*> transparentEntities;
+    for (const auto& entity : scene.getEntities())
     {
         phongLightShader->setTransform(entity.computeTransform());
-        auto *model = entity.getModel();
+        auto* model = entity.getModel();
         if (model)
         {
-            for (const auto *mesh : model->getOpaqueMeshes())
+            for (const auto* mesh : model->getOpaqueMeshes())
             {
                 mesh->render(*phongLightShader);
             }
@@ -75,7 +75,7 @@ void RenderSystem::render(const Scene &scene, const Camera &camera) const
         }
     }
 
-    auto frontToBack = [&camera](const Entity *entity1, const Entity *entity2)
+    auto frontToBack = [&camera](const Entity* entity1, const Entity* entity2)
     {
         auto distance1 = glm::length2(entity1->getPosition() - camera.getPosition());
         auto distance2 = glm::length2(entity2->getPosition() - camera.getPosition());
@@ -87,13 +87,13 @@ void RenderSystem::render(const Scene &scene, const Camera &camera) const
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    for (const auto *entity : transparentEntities)
+    for (const auto* entity : transparentEntities)
     {
         phongLightShader->setTransform(entity->computeTransform());
-        auto *model = entity->getModel();
+        auto* model = entity->getModel();
         if (model)
         {
-            for (const auto *mesh : entity->getModel()->getTransparentMeshes())
+            for (const auto* mesh : entity->getModel()->getTransparentMeshes())
             {
                 mesh->render(*phongLightShader);
             }
@@ -105,14 +105,14 @@ void RenderSystem::render(const Scene &scene, const Camera &camera) const
     phongLightShader->unuse();
 }
 
-void RenderSystem::computeDirectionalShadowMaps(const Scene &scene) const
+void RenderSystem::computeDirectionalShadowMaps(const Scene& scene) const
 {
     directionalShadowMapShader->use();
 
     for (int i = 0; i < scene.getDirectionalLights().size(); ++i)
     {
-        const auto &light = scene.getDirectionalLights()[i];
-        const auto &shadowMap = scene.getDirectionalLightShadowMaps()[i];
+        const auto& light = scene.getDirectionalLights()[i];
+        const auto& shadowMap = scene.getDirectionalLightShadowMaps()[i];
 
         glViewport(0, 0, shadowMap.getWidth(), shadowMap.getHeight());
 
@@ -122,13 +122,13 @@ void RenderSystem::computeDirectionalShadowMaps(const Scene &scene) const
 
         directionalShadowMapShader->setLightTransform(light.computeLightTransform()[0]);
 
-        for (const auto &entity : scene.getEntities())
+        for (const auto& entity : scene.getEntities())
         {
             directionalShadowMapShader->setTransform(entity.computeTransform());
-            auto *model = entity.getModel();
+            auto* model = entity.getModel();
             if (model)
             {
-                for (const auto *mesh : model->getOpaqueMeshes())
+                for (const auto* mesh : model->getOpaqueMeshes())
                 {
                     mesh->render();
                 }

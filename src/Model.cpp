@@ -4,18 +4,18 @@
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 
-Model::Model(std::vector<std::shared_ptr<Mesh>> &&meshes, std::vector<std::shared_ptr<Material>> &&materials)
+Model::Model(std::vector<std::shared_ptr<Mesh>>&& meshes, std::vector<std::shared_ptr<Material>>&& materials)
     : meshes{std::move(meshes)}, materials{std::move(materials)}
 {
     filterTransparentMeshes();
 }
 
-Model::Model(Model &&reference) noexcept : meshes{std::move(reference.meshes)}, materials{std::move(reference.materials)}
+Model::Model(Model&& reference) noexcept : meshes{std::move(reference.meshes)}, materials{std::move(reference.materials)}
 {
     filterTransparentMeshes();
 }
 
-Model &Model::operator=(Model &&reference) noexcept
+Model& Model::operator=(Model&& reference) noexcept
 {
     if (this != &reference)
     {
@@ -30,7 +30,7 @@ Model &Model::operator=(Model &&reference) noexcept
 
 void Model::filterTransparentMeshes()
 {
-    for (const auto &mesh : this->meshes)
+    for (const auto& mesh : this->meshes)
     {
         if (mesh->isTransparent())
         {
@@ -47,7 +47,7 @@ std::unique_ptr<Model> Model::loadModel(std::filesystem::path filePath)
 {
     Assimp::Importer importer;
 
-    auto *scene = importer.ReadFile(filePath.string(),
+    auto* scene = importer.ReadFile(filePath.string(),
                                     aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices |
                                         aiProcess_CalcTangentSpace);
     if (!scene)
@@ -61,7 +61,7 @@ std::unique_ptr<Model> Model::loadModel(std::filesystem::path filePath)
     return std::make_unique<Model>(std::move(meshes), std::move(materials));
 }
 
-std::vector<std::shared_ptr<Mesh>> Model::loadMeshes(aiNode *node, const aiScene *scene, const std::vector<std::shared_ptr<Material>> &materials)
+std::vector<std::shared_ptr<Mesh>> Model::loadMeshes(aiNode* node, const aiScene* scene, const std::vector<std::shared_ptr<Material>>& materials)
 {
     std::vector<std::shared_ptr<Mesh>> meshes;
 
@@ -74,7 +74,7 @@ std::vector<std::shared_ptr<Mesh>> Model::loadMeshes(aiNode *node, const aiScene
     for (size_t i = 0; i < node->mNumChildren; ++i)
     {
         auto childrenMeshes = loadMeshes(node->mChildren[i], scene, materials);
-        for (auto &childMesh : childrenMeshes)
+        for (auto& childMesh : childrenMeshes)
         {
             meshes.push_back(std::move(childMesh));
         }
@@ -83,7 +83,7 @@ std::vector<std::shared_ptr<Mesh>> Model::loadMeshes(aiNode *node, const aiScene
     return meshes;
 }
 
-std::shared_ptr<Mesh> Model::loadMesh(aiMesh *mesh, const std::vector<std::shared_ptr<Material>> &materials)
+std::shared_ptr<Mesh> Model::loadMesh(aiMesh* mesh, const std::vector<std::shared_ptr<Material>>& materials)
 {
     size_t vertexCount = mesh->mNumVertices;
 
@@ -140,11 +140,11 @@ std::shared_ptr<Mesh> Model::loadMesh(aiMesh *mesh, const std::vector<std::share
         }
     }
 
-    auto *material = materials[mesh->mMaterialIndex].get();
+    auto* material = materials[mesh->mMaterialIndex].get();
     return std::make_unique<Mesh>(vertices, indices, material);
 }
 
-std::vector<std::shared_ptr<Material>> Model::loadMaterials(const aiScene *scene)
+std::vector<std::shared_ptr<Material>> Model::loadMaterials(const aiScene* scene)
 {
     size_t materialCount = scene->mNumMaterials;
 
@@ -152,7 +152,7 @@ std::vector<std::shared_ptr<Material>> Model::loadMaterials(const aiScene *scene
 
     for (int i = 0; i < materialCount; ++i)
     {
-        auto *material = scene->mMaterials[i];
+        auto* material = scene->mMaterials[i];
 
         aiColor3D ambientColor;
         material->Get(AI_MATKEY_COLOR_AMBIENT, ambientColor);
@@ -198,7 +198,7 @@ std::vector<std::shared_ptr<Material>> Model::loadMaterials(const aiScene *scene
             }
         }
 
-        auto colorToGlm = [](const aiColor3D &color) -> glm::vec3 { return {color.r, color.g, color.b}; };
+        auto colorToGlm = [](const aiColor3D& color) -> glm::vec3 { return {color.r, color.g, color.b}; };
 
         materials[i] = std::make_unique<Material>(colorToGlm(ambientColor),
                                                   colorToGlm(diffuseColor),

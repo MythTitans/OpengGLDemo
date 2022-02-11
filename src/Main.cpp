@@ -69,7 +69,7 @@ int main(void)
             window.display();
         }
     }
-    catch (const std::runtime_error &error)
+    catch (const std::runtime_error& error)
     {
         std::cout << error.what();
         return -1;

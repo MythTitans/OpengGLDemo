@@ -2,7 +2,7 @@
 
 #include "include/Shader.h"
 
-Mesh::Mesh(const std::vector<GLfloat> &vertices, const std::vector<GLuint> indices, const Material *material)
+Mesh::Mesh(const std::vector<GLfloat>& vertices, const std::vector<GLuint> indices, const Material* material)
     : indexCount{(GLsizei)indices.size()}, material{material}
 {
     glGenVertexArrays(1, &vao);
@@ -15,16 +15,16 @@ Mesh::Mesh(const std::vector<GLfloat> &vertices, const std::vector<GLuint> indic
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * VERTEX_COMPONENTS, 0);
     glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * VERTEX_COMPONENTS, (void *)(sizeof(vertices[0]) * 3));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * VERTEX_COMPONENTS, (void*)(sizeof(vertices[0]) * 3));
     glEnableVertexAttribArray(1);
 
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * VERTEX_COMPONENTS, (void *)(sizeof(vertices[0]) * 5));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * VERTEX_COMPONENTS, (void*)(sizeof(vertices[0]) * 5));
     glEnableVertexAttribArray(2);
 
-    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * VERTEX_COMPONENTS, (void *)(sizeof(vertices[0]) * 8));
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * VERTEX_COMPONENTS, (void*)(sizeof(vertices[0]) * 8));
     glEnableVertexAttribArray(3);
 
-    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * VERTEX_COMPONENTS, (void *)(sizeof(vertices[0]) * 11));
+    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * VERTEX_COMPONENTS, (void*)(sizeof(vertices[0]) * 11));
     glEnableVertexAttribArray(4);
 
     glGenBuffers(1, &ibo);
@@ -36,7 +36,7 @@ Mesh::Mesh(const std::vector<GLfloat> &vertices, const std::vector<GLuint> indic
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-Mesh::Mesh(Mesh &&reference) noexcept
+Mesh::Mesh(Mesh&& reference) noexcept
 {
     vao = reference.vao;
     vbo = reference.vbo;
@@ -50,7 +50,7 @@ Mesh::Mesh(Mesh &&reference) noexcept
     reference.indexCount = 0;
 }
 
-Mesh &Mesh::operator=(Mesh &&reference) noexcept
+Mesh& Mesh::operator=(Mesh&& reference) noexcept
 {
     if (this != &reference)
     {
@@ -83,7 +83,7 @@ void Mesh::render() const
     glBindVertexArray(0);
 }
 
-void Mesh::render(const MaterialShader &shader) const
+void Mesh::render(const MaterialShader& shader) const
 {
     shader.useMaterial(material);
     render();

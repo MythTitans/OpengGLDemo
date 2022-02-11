@@ -6,10 +6,10 @@ class ShadowMap
 {
   public:
     ShadowMap(unsigned int width, unsigned int height);
-    ShadowMap(const ShadowMap &) = delete;
-    ShadowMap &operator=(const ShadowMap &) = delete;
-    ShadowMap(ShadowMap &&reference) noexcept;
-    ShadowMap &operator=(ShadowMap &&reference) noexcept;
+    ShadowMap(const ShadowMap&) = delete;
+    ShadowMap& operator=(const ShadowMap&) = delete;
+    ShadowMap(ShadowMap&& reference) noexcept;
+    ShadowMap& operator=(ShadowMap&& reference) noexcept;
     ~ShadowMap();
 
     inline unsigned int getWidth() const

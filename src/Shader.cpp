@@ -5,7 +5,7 @@
 
 #include <GL/gl.h>
 
-Shader::Shader(const std::string &vertexShaderCode, const std::string &fragmentShaderCode)
+Shader::Shader(const std::string& vertexShaderCode, const std::string& fragmentShaderCode)
 {
     programId = glCreateProgram();
 
@@ -15,12 +15,12 @@ Shader::Shader(const std::string &vertexShaderCode, const std::string &fragmentS
     link();
 }
 
-Shader::Shader(Shader &&reference) noexcept : programId{reference.programId}
+Shader::Shader(Shader&& reference) noexcept : programId{reference.programId}
 {
     reference.programId = 0;
 }
 
-Shader &Shader::operator=(Shader &&reference) noexcept
+Shader& Shader::operator=(Shader&& reference) noexcept
 {
     if (this != &reference)
     {
@@ -46,11 +46,11 @@ void Shader::unuse() const
     glUseProgram(0);
 }
 
-void Shader::compile(const std::string &shaderCode, GLenum shaderType) const
+void Shader::compile(const std::string& shaderCode, GLenum shaderType) const
 {
     GLuint vertexShaderId = glCreateShader(shaderType);
 
-    const GLchar *code[1];
+    const GLchar* code[1];
     code[0] = shaderCode.c_str();
 
     GLint codeLength[1];

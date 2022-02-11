@@ -73,12 +73,12 @@ class Light
         return type;
     }
 
-    inline const glm::vec3 &getPosition() const
+    inline const glm::vec3& getPosition() const
     {
         return position;
     }
 
-    inline const glm::vec3 &getDirection() const
+    inline const glm::vec3& getDirection() const
     {
         return direction;
     }
@@ -88,7 +88,7 @@ class Light
         return intensity;
     }
 
-    inline const glm::vec3 &getColor() const
+    inline const glm::vec3& getColor() const
     {
         return color;
     }

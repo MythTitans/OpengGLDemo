@@ -9,7 +9,7 @@ class Skybox
 {
   public:
     Skybox(std::unique_ptr<CubeMap> skyboxMap);
-    void render(const SkyboxShader &skyboxShader) const;
+    void render(const SkyboxShader& skyboxShader) const;
 
   private:
     std::unique_ptr<CubeMap> skyboxMap;

@@ -3,7 +3,7 @@
 #include "include/Camera.h"
 #include "include/Window.h"
 
-InputHandler::InputHandler(Window &window, Camera &camera)
+InputHandler::InputHandler(Window& window, Camera& camera)
     : window{window}, camera{camera}, lastMouseX{0.0}, lastMouseY{0.0}, firstMouseMovement{true}, horizontalMouseDelta{0.0}, verticalMouseDelta{0.0}
 {
     inputsMap.resize(512);

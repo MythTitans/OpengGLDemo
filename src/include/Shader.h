@@ -10,18 +10,18 @@
 class Shader
 {
   public:
-    Shader(const std::string &vertexShaderCode, const std::string &fragmentShaderCode);
-    Shader(const Shader &) = delete;
-    Shader &operator=(const Shader &) = delete;
-    Shader(Shader &&reference) noexcept;
-    Shader &operator=(Shader &&reference) noexcept;
+    Shader(const std::string& vertexShaderCode, const std::string& fragmentShaderCode);
+    Shader(const Shader&) = delete;
+    Shader& operator=(const Shader&) = delete;
+    Shader(Shader&& reference) noexcept;
+    Shader& operator=(Shader&& reference) noexcept;
     virtual ~Shader();
 
     void use() const;
     void unuse() const;
 
   protected:
-    inline GLuint getUniformLocation(const std::string &name) const
+    inline GLuint getUniformLocation(const std::string& name) const
     {
         return glGetUniformLocation(programId, name.c_str());
     }
@@ -30,6 +30,6 @@ class Shader
     GLuint programId;
 
   private:
-    void compile(const std::string &shaderCode, GLenum shaderType) const;
+    void compile(const std::string& shaderCode, GLenum shaderType) const;
     void link() const;
 };

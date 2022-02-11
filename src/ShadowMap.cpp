@@ -36,7 +36,7 @@ ShadowMap::ShadowMap(unsigned int width, unsigned int height) : width{width}, he
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-ShadowMap::ShadowMap(ShadowMap &&reference) noexcept : width{reference.width}, height{reference.height}, fbo{reference.fbo}, textureId{reference.textureId}
+ShadowMap::ShadowMap(ShadowMap&& reference) noexcept : width{reference.width}, height{reference.height}, fbo{reference.fbo}, textureId{reference.textureId}
 {
     reference.width = 0;
     reference.height = 0;
@@ -44,7 +44,7 @@ ShadowMap::ShadowMap(ShadowMap &&reference) noexcept : width{reference.width}, h
     reference.textureId = 0;
 }
 
-ShadowMap &ShadowMap::operator=(ShadowMap &&reference) noexcept
+ShadowMap& ShadowMap::operator=(ShadowMap&& reference) noexcept
 {
     if (this != &reference)
     {

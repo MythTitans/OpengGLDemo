@@ -50,7 +50,7 @@ Skybox::Skybox(std::unique_ptr<CubeMap> skyboxMap) : skyboxMap{std::move(skyboxM
 {
 }
 
-void Skybox::render(const SkyboxShader &skyboxShader) const
+void Skybox::render(const SkyboxShader& skyboxShader) const
 {
     glDepthMask(GL_FALSE);
     skyboxShader.useSkyboxMap(skyboxMap.get());

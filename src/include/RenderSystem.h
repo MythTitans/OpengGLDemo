@@ -13,12 +13,12 @@ class Scene;
 class RenderSystem
 {
   public:
-    RenderSystem(const Window &window);
+    RenderSystem(const Window& window);
 
-    void render(const Scene &scene, const Camera &camera) const;
+    void render(const Scene& scene, const Camera& camera) const;
 
   private:
-    void computeDirectionalShadowMaps(const Scene &scene) const;
+    void computeDirectionalShadowMaps(const Scene& scene) const;
 
   private:
     int displayWidth;

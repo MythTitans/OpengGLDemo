@@ -2,7 +2,7 @@
 
 #include <stb_image.h>
 
-Texture::Texture(unsigned char *data, int width, int height, bool alpha)
+Texture::Texture(unsigned char* data, int width, int height, bool alpha)
 {
     glGenTextures(1, &textureId);
     glBindTexture(GL_TEXTURE_2D, textureId);
@@ -25,12 +25,12 @@ Texture::Texture(unsigned char *data, int width, int height, bool alpha)
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-Texture::Texture(Texture &&reference) noexcept : textureId{reference.textureId}
+Texture::Texture(Texture&& reference) noexcept : textureId{reference.textureId}
 {
     reference.textureId = 0;
 }
 
-Texture &Texture::operator=(Texture &&reference) noexcept
+Texture& Texture::operator=(Texture&& reference) noexcept
 {
     if (this != &reference)
     {
@@ -52,7 +52,7 @@ std::unique_ptr<Texture> Texture::loadTexture(std::filesystem::path filePath)
     int height;
     int depth;
 
-    auto *data = stbi_load(filePath.string().c_str(), &width, &height, &depth, 0);
+    auto* data = stbi_load(filePath.string().c_str(), &width, &height, &depth, 0);
     if (!data)
     {
         throw std::runtime_error("Failed to load texture " + filePath.string());

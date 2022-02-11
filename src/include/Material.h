@@ -16,17 +16,17 @@ class Material
              std::unique_ptr<Texture> specularMap,
              float opacity);
 
-    inline const glm::vec3 &getAmbientColor() const
+    inline const glm::vec3& getAmbientColor() const
     {
         return ambientColor;
     }
 
-    inline const glm::vec3 &getDiffuseColor() const
+    inline const glm::vec3& getDiffuseColor() const
     {
         return diffuseColor;
     }
 
-    inline const glm::vec3 &getSpecularColor() const
+    inline const glm::vec3& getSpecularColor() const
     {
         return specularColor;
     }
@@ -36,17 +36,17 @@ class Material
         return specularPower;
     }
 
-    inline const Texture *getDiffuseMap() const
+    inline const Texture* getDiffuseMap() const
     {
         return diffuseMap.get();
     }
 
-    inline const Texture *getNormalMap() const
+    inline const Texture* getNormalMap() const
     {
         return normalMap.get();
     }
 
-    inline const Texture *getSpecularMap() const
+    inline const Texture* getSpecularMap() const
     {
         return specularMap.get();
     }

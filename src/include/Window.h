@@ -10,10 +10,10 @@ class InputHandler;
 class Window
 {
   public:
-    Window(unsigned int width, unsigned int height, const std::string &title);
+    Window(unsigned int width, unsigned int height, const std::string& title);
     ~Window();
 
-    void registerInputHandler(InputHandler *inputHandler) const;
+    void registerInputHandler(InputHandler* inputHandler) const;
     bool handleEvents() const;
     void display() const;
     void close() const;
@@ -34,7 +34,7 @@ class Window
     }
 
   private:
-    GLFWwindow *window;
+    GLFWwindow* window;
     int framebufferWidth;
     int framebufferHeight;
 };

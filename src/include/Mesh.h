@@ -13,15 +13,15 @@ class Shader;
 class Mesh
 {
   public:
-    Mesh(const std::vector<GLfloat> &vertices, const std::vector<GLuint> indices, const Material *material);
-    Mesh(const Mesh &) = delete;
-    Mesh &operator=(const Mesh &) = delete;
-    Mesh(Mesh &&reference) noexcept;
-    Mesh &operator=(Mesh &&reference) noexcept;
+    Mesh(const std::vector<GLfloat>& vertices, const std::vector<GLuint> indices, const Material* material);
+    Mesh(const Mesh&) = delete;
+    Mesh& operator=(const Mesh&) = delete;
+    Mesh(Mesh&& reference) noexcept;
+    Mesh& operator=(Mesh&& reference) noexcept;
     ~Mesh();
 
     void render() const;
-    void render(const MaterialShader &shader) const;
+    void render(const MaterialShader& shader) const;
 
     inline bool isTransparent() const
     {
@@ -35,5 +35,5 @@ class Mesh
     GLuint vbo;
     GLuint ibo;
     GLsizei indexCount;
-    const Material *material;
+    const Material* material;
 };

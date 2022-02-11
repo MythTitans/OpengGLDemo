@@ -2,7 +2,7 @@
 
 #include <stb_image.h>
 
-CubeMap::CubeMap(std::array<unsigned char *, 6> data, int width, int height)
+CubeMap::CubeMap(std::array<unsigned char*, 6> data, int width, int height)
 {
     glGenTextures(1, &textureId);
     glBindTexture(GL_TEXTURE_CUBE_MAP, textureId);
@@ -21,12 +21,12 @@ CubeMap::CubeMap(std::array<unsigned char *, 6> data, int width, int height)
     glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }
 
-CubeMap::CubeMap(CubeMap &&reference) noexcept : textureId{reference.textureId}
+CubeMap::CubeMap(CubeMap&& reference) noexcept : textureId{reference.textureId}
 {
     reference.textureId = 0;
 }
 
-CubeMap &CubeMap::operator=(CubeMap &&reference) noexcept
+CubeMap& CubeMap::operator=(CubeMap&& reference) noexcept
 {
     if (this != &reference)
     {
@@ -48,7 +48,7 @@ std::unique_ptr<CubeMap> CubeMap::loadCubeMap(std::array<std::filesystem::path, 
     int height;
     int depth;
 
-    std::array<unsigned char *, 6> data;
+    std::array<unsigned char*, 6> data;
     for (int i = 0; i < filePaths.size(); ++i)
     {
         data[i] = stbi_load(filePaths[i].string().c_str(), &width, &height, &depth, 0);
