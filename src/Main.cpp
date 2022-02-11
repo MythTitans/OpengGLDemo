@@ -37,12 +37,12 @@ int main(void)
 
         Entity groundEntity{ground};
 
-        std::array<std::filesystem::path, 6> skyboxFaces = {"../../resources/textures/dummy.png",
-                                                            "../../resources/textures/dummy.png",
-                                                            "../../resources/textures/dummy.png",
-                                                            "../../resources/textures/dummy.png",
-                                                            "../../resources/textures/dummy.png",
-                                                            "../../resources/textures/dummy.png"};
+        std::array<std::filesystem::path, 6> skyboxFaces = {"../../resources/textures/specular_2.png",
+                                                            "../../resources/textures/specular_2.png",
+                                                            "../../resources/textures/specular_2.png",
+                                                            "../../resources/textures/specular_2.png",
+                                                            "../../resources/textures/specular_2.png",
+                                                            "../../resources/textures/specular_2.png"};
 
         Scene scene{CubeMap::loadCubeMap(skyboxFaces)};
         scene.setAmbientColor({0.1f, 0.1f, 0.1f});
@@ -105,7 +105,7 @@ std::unique_ptr<Model> createGround(float size)
     glm::vec3 fullWhite{1.0f, 1.0f, 1.0f};
 
     auto texture = Texture::loadTexture("../../resources/textures/dirt.png");
-    auto material = std::make_unique<Material>(fullWhite, fullWhite, fullWhite, 100.0f, std::move(texture), nullptr, nullptr, 1.0f);
+    auto material = std::make_unique<Material>(fullWhite, fullWhite, fullWhite, 100.0f, 0, std::move(texture), nullptr, nullptr, nullptr, 1.0f);
     auto plane = std::make_unique<Mesh>(std::move(vertices), std::move(indices), material.get());
 
     std::vector<std::shared_ptr<Mesh>> meshes{1};

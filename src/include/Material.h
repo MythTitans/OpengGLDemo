@@ -11,9 +11,11 @@ class Material
              glm::vec3 diffuseColor,
              glm::vec3 specularColor,
              float specularPower,
+             float emissivePower,
              std::unique_ptr<Texture> diffuseMap,
              std::unique_ptr<Texture> normalMap,
              std::unique_ptr<Texture> specularMap,
+             std::unique_ptr<Texture> emissiveMap,
              float opacity);
 
     inline const glm::vec3& getAmbientColor() const
@@ -36,6 +38,11 @@ class Material
         return specularPower;
     }
 
+    inline float getEmissivePower() const
+    {
+        return emissivePower;
+    }
+
     inline const Texture* getDiffuseMap() const
     {
         return diffuseMap.get();
@@ -49,6 +56,11 @@ class Material
     inline const Texture* getSpecularMap() const
     {
         return specularMap.get();
+    }
+
+    inline const Texture* getEmissiveMap() const
+    {
+        return emissiveMap.get();
     }
 
     inline float getOpacity() const
@@ -66,9 +78,11 @@ class Material
     glm::vec3 diffuseColor;
     glm::vec3 specularColor;
     float specularPower;
+    float emissivePower;
     std::unique_ptr<Texture> diffuseMap;
     std::unique_ptr<Texture> normalMap;
     std::unique_ptr<Texture> specularMap;
+    std::unique_ptr<Texture> emissiveMap;
     float opacity;
 
     static constexpr float TRANSPARENCY_THRESHOLD = 0.99f;

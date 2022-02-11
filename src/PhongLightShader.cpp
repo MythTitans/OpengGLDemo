@@ -10,6 +10,7 @@ PhongLightShader::PhongLightShader()
       dummyDiffuse{Texture::loadTexture("../../resources/textures/dummy.png")},
       dummyNormal{Texture::loadTexture("../../resources/textures/dummy_normal.png")},
       dummySpecular{Texture::loadTexture("../../resources/textures/dummy.png")},
+      dummyEmissive{Texture::loadTexture("../../resources/textures/dummy.png")},
       uniformProjectionLocation{getUniformLocation("projection")},
       uniformViewLocation{getUniformLocation("view")},
       uniformTransformLocation{getUniformLocation("model")},
@@ -62,9 +63,11 @@ PhongLightShader::PhongLightShader()
     uniformMaterial.diffuseColorLocation = getUniformLocation("material.diffuseColor");
     uniformMaterial.specularColorLocation = getUniformLocation("material.specularColor");
     uniformMaterial.specularPowerLocation = getUniformLocation("material.specularPower");
+    uniformMaterial.emissivePowerLocation = getUniformLocation("material.emissivePower");
     uniformMaterial.diffuseMapLocation = getUniformLocation("material.diffuseMap");
     uniformMaterial.normalMapLocation = getUniformLocation("material.normalMap");
     uniformMaterial.specularMapLocation = getUniformLocation("material.specularMap");
+    uniformMaterial.emissiveMapLocation = getUniformLocation("material.emissiveMap");
     uniformMaterial.opacityLocation = getUniformLocation("material.opacity");
 }
 
@@ -113,7 +116,7 @@ void PhongLightShader::setDirectionalLights(const std::vector<Light>& directiona
         glUniform3fv(uniformLight.directionLocation, 1, glm::value_ptr(light.getDirection()));
         glUniformMatrix4fv(uniformDirectionalLightTransformLocations[i], 1, GL_FALSE, glm::value_ptr(light.computeLightTransform()[0]));
 
-        size_t textureUnit = 3 + i;
+        size_t textureUnit = 4 + i;
         directionalLightShadowMaps[i].use(textureUnit);
         glUniform1i(uniformDirectionalLightShadowMapLocations[i], textureUnit);
     }
@@ -175,6 +178,7 @@ void PhongLightShader::useMaterial(const Material* material) const
         glUniform3fv(uniformMaterial.diffuseColorLocation, 1, glm::value_ptr(material->getDiffuseColor()));
         glUniform3fv(uniformMaterial.specularColorLocation, 1, glm::value_ptr(material->getSpecularColor()));
         glUniform1f(uniformMaterial.specularPowerLocation, material->getSpecularPower());
+        glUniform1f(uniformMaterial.emissivePowerLocation, material->getEmissivePower());
         glUniform1f(uniformMaterial.opacityLocation, material->getOpacity());
 
         auto* texture = material->getDiffuseMap();
@@ -208,9 +212,20 @@ void PhongLightShader::useMaterial(const Material* material) const
             dummySpecular->use(2);
         }
 
+        texture = material->getEmissiveMap();
+        if (texture)
+        {
+            texture->use(3);
+        }
+        else
+        {
+            dummyEmissive->use(3);
+        }
+
         glUniform1i(uniformMaterial.diffuseMapLocation, 0);
         glUniform1i(uniformMaterial.normalMapLocation, 1);
         glUniform1i(uniformMaterial.specularMapLocation, 2);
+        glUniform1i(uniformMaterial.emissiveMapLocation, 3);
     }
 }
 
@@ -231,6 +246,12 @@ void PhongLightShader::unuseMaterial(const Material* material) const
         }
 
         texture = material->getSpecularMap();
+        if (texture)
+        {
+            texture->unuse();
+        }
+
+        texture = material->getEmissiveMap();
         if (texture)
         {
             texture->unuse();

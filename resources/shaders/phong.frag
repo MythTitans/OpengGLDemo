@@ -19,9 +19,11 @@ struct Material
 	vec3 diffuseColor;
 	vec3 specularColor;
 	float specularPower;
+	float emissivePower;
 	sampler2D diffuseMap;
 	sampler2D normalMap;
 	sampler2D specularMap;
+	sampler2D emissiveMap;
 	float opacity;
 };
 
@@ -199,6 +201,6 @@ void main()
 	vec3 ambientColor = computeAmbientColor();
 	vec3 lightColor = computeDirectionalLights() + computePointLights() + computeSpotLights();
 
-	vec3 color = (ambientColor + lightColor) * texture(material.diffuseMap, texCoords).xyz;
+	vec3 color = (ambientColor + lightColor) * texture(material.diffuseMap, texCoords).xyz + material.emissivePower * texture(material.emissiveMap, texCoords).xyz;
 	finalColor = vec4(color, material.opacity);
 }

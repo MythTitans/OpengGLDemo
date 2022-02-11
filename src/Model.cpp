@@ -198,15 +198,34 @@ std::vector<std::shared_ptr<Material>> Model::loadMaterials(const aiScene* scene
             }
         }
 
+        std::unique_ptr<Texture> emissiveMap;
+        if (material->GetTextureCount(aiTextureType_EMISSIVE) != 0)
+        {
+            aiString file;
+            if (material->GetTexture(aiTextureType_EMISSIVE, 0, &file) == AI_SUCCESS)
+            {
+                std::filesystem::path filePath{file.C_Str()};
+                emissiveMap = Texture::loadTexture("../../" / filePath);
+            }
+        }
+
+        float emissivePower = 0;
+        if (emissiveMap)
+        {
+            emissivePower = 1;
+        }
+
         auto colorToGlm = [](const aiColor3D& color) -> glm::vec3 { return {color.r, color.g, color.b}; };
 
         materials[i] = std::make_unique<Material>(colorToGlm(ambientColor),
                                                   colorToGlm(diffuseColor),
                                                   colorToGlm(specularColor),
                                                   specularPower,
+                                                  emissivePower,
                                                   std::move(diffuseMap),
                                                   std::move(normalMap),
                                                   std::move(specularMap),
+                                                  std::move(emissiveMap),
                                                   opacity);
     }
 
