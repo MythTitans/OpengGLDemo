@@ -28,11 +28,11 @@ int main(void)
         InputHandler inputHandler{window, camera};
         RenderSystem renderer{window};
 
-        auto ground = createGround(50.0f);
-        auto ground2 = createGround(10.0f);
+        std::shared_ptr<Model> ground = createGround(50.0f);
+        std::shared_ptr<Model> ground2 = createGround(10.0f);
 
-        Entity groundEntity{ground.get()};
-        Entity groundEntity2{ground2.get()};
+        Entity groundEntity{ground};
+        Entity groundEntity2{ground2};
         groundEntity2.setPosition({0, 5, 0});
 
         std::array<std::filesystem::path, 6> skyboxFaces = {"../../resources/textures/dummy.png",
@@ -84,10 +84,10 @@ std::unique_ptr<Model> createGround(float size)
     float quarterSize = halfSize / 2;
     std::vector<GLfloat> vertices{
         // clang-format off
-            halfSize, 0.0f, halfSize,	0.0f, 0.0f,				0.0f, 1.0f, 0.0f,	0.0f, 0.0f, 1.0f,	1.0f, 0.0f, 0.0f,
-            halfSize, 0.0f, -halfSize,	0.25f * halfSize, 0.0f,			0.0f, 1.0f, 0.0f,	0.0f, 0.0f, 1.0f,	1.0f, 0.0f, 0.0f,
-            -halfSize, 0.0f, -halfSize,	0.25f * halfSize, 0.25f * halfSize,	0.0f, 1.0f, 0.0f,	0.0f, 0.0f, 1.0f,	1.0f, 0.0f, 0.0f,
-            -halfSize, 0.0f, halfSize,	0.0f, 0.25f * halfSize,			0.0f, 1.0f, 0.0f,	0.0f, 0.0f, 1.0f,	1.0f, 0.0f, 0.0f
+        halfSize, 0.0f, halfSize,	0.0f, 0.0f,				0.0f, 1.0f, 0.0f,	0.0f, 0.0f, 1.0f,	1.0f, 0.0f, 0.0f,
+        halfSize, 0.0f, -halfSize,	0.25f * halfSize, 0.0f,			0.0f, 1.0f, 0.0f,	0.0f, 0.0f, 1.0f,	1.0f, 0.0f, 0.0f,
+        -halfSize, 0.0f, -halfSize,	0.25f * halfSize, 0.25f * halfSize,	0.0f, 1.0f, 0.0f,	0.0f, 0.0f, 1.0f,	1.0f, 0.0f, 0.0f,
+        -halfSize, 0.0f, halfSize,	0.0f, 0.25f * halfSize,			0.0f, 1.0f, 0.0f,	0.0f, 0.0f, 1.0f,	1.0f, 0.0f, 0.0f
         // clang-format on
     };
 
@@ -104,9 +104,9 @@ std::unique_ptr<Model> createGround(float size)
     auto material = std::make_unique<Material>(fullWhite, fullWhite, fullWhite, 100.0f, std::move(texture), nullptr, nullptr, 1.0f);
     auto plane = std::make_unique<Mesh>(std::move(vertices), std::move(indices), material.get());
 
-    std::vector<std::unique_ptr<Mesh>> meshes{1};
+    std::vector<std::shared_ptr<Mesh>> meshes{1};
     meshes[0] = std::move(plane);
-    std::vector<std::unique_ptr<Material>> materials{1};
+    std::vector<std::shared_ptr<Material>> materials{1};
     materials[0] = std::move(material);
 
     return std::make_unique<Model>(std::move(meshes), std::move(materials));

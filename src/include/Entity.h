@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
 
@@ -8,7 +10,7 @@ class Model;
 class Entity
 {
   public:
-    Entity(Model *model);
+    explicit Entity(std::shared_ptr<Model> model);
 
     glm::mat4 computeTransform() const;
 
@@ -64,7 +66,7 @@ class Entity
 
     inline const Model *getModel() const
     {
-        return model;
+        return model.get();
     }
 
   private:
@@ -73,7 +75,7 @@ class Entity
     float pitch;
     float roll;
     glm::vec3 scale;
-    Model *model;
+    std::shared_ptr<Model> model;
 
     static constexpr float TO_RADIANS = glm::pi<float>() / 180.0f;
 };

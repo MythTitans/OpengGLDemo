@@ -4,7 +4,7 @@
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 
-Model::Model(std::vector<std::unique_ptr<Mesh>> &&meshes, std::vector<std::unique_ptr<Material>> &&materials)
+Model::Model(std::vector<std::shared_ptr<Mesh>> &&meshes, std::vector<std::shared_ptr<Material>> &&materials)
     : meshes{std::move(meshes)}, materials{std::move(materials)}
 {
     filterTransparentMeshes();
@@ -61,9 +61,9 @@ std::unique_ptr<Model> Model::loadModel(std::filesystem::path filePath)
     return std::make_unique<Model>(std::move(meshes), std::move(materials));
 }
 
-std::vector<std::unique_ptr<Mesh>> Model::loadMeshes(aiNode *node, const aiScene *scene, const std::vector<std::unique_ptr<Material>> &materials)
+std::vector<std::shared_ptr<Mesh>> Model::loadMeshes(aiNode *node, const aiScene *scene, const std::vector<std::shared_ptr<Material>> &materials)
 {
-    std::vector<std::unique_ptr<Mesh>> meshes;
+    std::vector<std::shared_ptr<Mesh>> meshes;
 
     for (size_t i = 0; i < node->mNumMeshes; ++i)
     {
@@ -83,7 +83,7 @@ std::vector<std::unique_ptr<Mesh>> Model::loadMeshes(aiNode *node, const aiScene
     return meshes;
 }
 
-std::unique_ptr<Mesh> Model::loadMesh(aiMesh *mesh, const std::vector<std::unique_ptr<Material>> &materials)
+std::shared_ptr<Mesh> Model::loadMesh(aiMesh *mesh, const std::vector<std::shared_ptr<Material>> &materials)
 {
     size_t vertexCount = mesh->mNumVertices;
 
@@ -144,11 +144,11 @@ std::unique_ptr<Mesh> Model::loadMesh(aiMesh *mesh, const std::vector<std::uniqu
     return std::make_unique<Mesh>(vertices, indices, material);
 }
 
-std::vector<std::unique_ptr<Material>> Model::loadMaterials(const aiScene *scene)
+std::vector<std::shared_ptr<Material>> Model::loadMaterials(const aiScene *scene)
 {
     size_t materialCount = scene->mNumMaterials;
 
-    std::vector<std::unique_ptr<Material>> materials(materialCount);
+    std::vector<std::shared_ptr<Material>> materials(materialCount);
 
     for (int i = 0; i < materialCount; ++i)
     {

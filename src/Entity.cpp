@@ -2,7 +2,7 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-Entity::Entity(Model *model) : position{0, 0, 0}, yaw{0}, pitch{0}, roll{0}, scale{1, 1, 1}, model{model}
+Entity::Entity(std::shared_ptr<Model> model) : position{0, 0, 0}, yaw{0}, pitch{0}, roll{0}, scale{1, 1, 1}, model{std::move(model)}
 {
 }
 
