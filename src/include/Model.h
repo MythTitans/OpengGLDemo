@@ -20,7 +20,7 @@ class Model
     Model(Model&& reference) noexcept;
     Model& operator=(Model&& reference) noexcept;
 
-    static std::unique_ptr<Model> loadModel(std::filesystem::path filePath);
+    static std::shared_ptr<Model> loadModel(std::filesystem::path filePath);
 
     inline const std::vector<const Mesh*>& getOpaqueMeshes() const
     {

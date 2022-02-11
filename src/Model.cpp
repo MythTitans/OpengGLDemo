@@ -43,7 +43,7 @@ void Model::filterTransparentMeshes()
     }
 }
 
-std::unique_ptr<Model> Model::loadModel(std::filesystem::path filePath)
+std::shared_ptr<Model> Model::loadModel(std::filesystem::path filePath)
 {
     Assimp::Importer importer;
 
@@ -172,7 +172,7 @@ std::vector<std::shared_ptr<Material>> Model::loadMaterials(const aiScene* scene
             if (material->GetTexture(aiTextureType_DIFFUSE, 0, &file) == AI_SUCCESS)
             {
                 std::filesystem::path filePath{file.C_Str()};
-                diffuseMap = Texture::loadTexture("Textures" / filePath.filename());
+                diffuseMap = Texture::loadTexture("../../" / filePath);
             }
         }
 
@@ -183,7 +183,7 @@ std::vector<std::shared_ptr<Material>> Model::loadMaterials(const aiScene* scene
             if (material->GetTexture(aiTextureType_NORMALS, 0, &file) == AI_SUCCESS)
             {
                 std::filesystem::path filePath{file.C_Str()};
-                normalMap = Texture::loadTexture("Textures" / filePath.filename());
+                normalMap = Texture::loadTexture("../../" / filePath);
             }
         }
 
@@ -194,7 +194,7 @@ std::vector<std::shared_ptr<Material>> Model::loadMaterials(const aiScene* scene
             if (material->GetTexture(aiTextureType_SPECULAR, 0, &file) == AI_SUCCESS)
             {
                 std::filesystem::path filePath{file.C_Str()};
-                specularMap = Texture::loadTexture("Textures" / filePath.filename());
+                specularMap = Texture::loadTexture("../../" / filePath);
             }
         }
 
