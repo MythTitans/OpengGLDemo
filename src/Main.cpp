@@ -46,11 +46,11 @@ int main(void)
 
         Scene scene{CubeMap::loadCubeMap(skyboxFaces)};
         scene.setAmbientColor({0.1f, 0.1f, 0.1f});
-        scene.addEntity(groundEntity);
-        scene.addEntity(golem);
+        scene.addEntity(&groundEntity);
+        scene.addEntity(&golem);
         scene.addLight(Light::directionalLight(1.0f, {1.0f, 1.0f, 1.0f}, {-10.0f, 10.0f, -10.0f}, {1.0f, -1.0f, 1.0f}));
         scene.addLight(Light::pointLight(2.0f, {1.0f, 0.25f, 0.25f}, {5.0f, 3.0f, 0.0f}, 0.3f, 0.2f, 0.1f));
-        // scene.addLight(Light::spotLight(1.0f, { 1.0f, 0.0f, 1.0f }, { -5.0f, 3.0f, 0.0f }, { 2.0f, -1.0f, 0.0f }, 0.1f, 0.1f, 0.1f, glm::radians(90.0f)));
+        scene.addLight(Light::spotLight(1.0f, {1.0f, 0.0f, 1.0f}, {-5.0f, 3.0f, 0.0f}, {2.0f, -1.0f, 0.0f}, 0.1f, 0.1f, 0.1f, glm::radians(90.0f)));
         scene.addLight(Light::pointLight(2.0f, {0.25f, 0.25f, 1.0f}, {-5.0f, 3.0f, 0.0f}, 0.3f, 0.2f, 0.1f));
 
         auto previousTime = std::chrono::steady_clock::now();
@@ -65,6 +65,8 @@ int main(void)
             previousTime = currentTime;
 
             camera.update(deltaTime);
+
+            golem.setYaw(golem.getYaw() + deltaTime * 20);
 
             renderer.render(scene, camera);
 

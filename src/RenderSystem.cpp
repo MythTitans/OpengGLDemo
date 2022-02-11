@@ -59,8 +59,8 @@ void RenderSystem::render(const Scene& scene, const Camera& camera) const
     std::vector<const Entity*> transparentEntities;
     for (const auto& entity : scene.getEntities())
     {
-        phongLightShader->setTransform(entity.computeTransform());
-        auto* model = entity.getModel();
+        phongLightShader->setTransform(entity->computeTransform());
+        auto* model = entity->getModel();
         if (model)
         {
             for (const auto* mesh : model->getOpaqueMeshes())
@@ -70,7 +70,7 @@ void RenderSystem::render(const Scene& scene, const Camera& camera) const
 
             if (model->hasTransparentMeshes())
             {
-                transparentEntities.push_back(&entity);
+                transparentEntities.push_back(entity);
             }
         }
     }
@@ -124,8 +124,8 @@ void RenderSystem::computeDirectionalShadowMaps(const Scene& scene) const
 
         for (const auto& entity : scene.getEntities())
         {
-            directionalShadowMapShader->setTransform(entity.computeTransform());
-            auto* model = entity.getModel();
+            directionalShadowMapShader->setTransform(entity->computeTransform());
+            auto* model = entity->getModel();
             if (model)
             {
                 for (const auto* mesh : model->getOpaqueMeshes())

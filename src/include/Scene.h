@@ -12,13 +12,13 @@ class Scene
   public:
     Scene(std::unique_ptr<CubeMap> skyboxMap);
 
-    void addEntity(Entity entity);
+    void addEntity(Entity* entity);
     void addLight(Light light);
     void setAmbientColor(const glm::vec3& ambientColor);
 
     const glm::vec3& getAmbientColor() const;
 
-    inline const std::vector<Entity>& getEntities() const
+    inline const std::vector<Entity*>& getEntities() const
     {
         return entities;
     }
@@ -49,7 +49,7 @@ class Scene
     }
 
   private:
-    std::vector<Entity> entities;
+    std::vector<Entity*> entities;
     std::vector<Light> directionalLights;
     std::vector<Light> pointLights;
     std::vector<Light> spotLights;

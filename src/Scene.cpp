@@ -1,12 +1,12 @@
 #include "include/Scene.h"
 
-static const int SHADOW_MAP_SIZE = 2048;
+static const int SHADOW_MAP_SIZE = 4096;
 
 Scene::Scene(std::unique_ptr<CubeMap> skyboxMap) : ambientColor{0, 0, 0}, skybox{std::move(skyboxMap)}
 {
 }
 
-void Scene::addEntity(Entity entity)
+void Scene::addEntity(Entity* entity)
 {
     entities.push_back(entity);
 }
