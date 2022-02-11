@@ -18,8 +18,8 @@ InputHandler::InputHandler(Window& window, Camera& camera) :
 
 void InputHandler::processInputs()
 {
-	camera.lookVertical((float) (verticalMouseDelta * CAMERA_LOOK_SPEED));
-	camera.lookHorizontal((float) (horizontalMouseDelta * CAMERA_LOOK_SPEED));
+	camera.lookVertical((float) (verticalMouseDelta * CAMERA_VERTICAL_LOOK_SPEED));
+	camera.lookHorizontal((float) (horizontalMouseDelta * CAMERA_HORIZONTAL_LOOK_SPEED));
 
 	verticalMouseDelta = 0.0;
 	horizontalMouseDelta = 0.0;

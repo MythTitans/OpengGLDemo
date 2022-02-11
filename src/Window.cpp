@@ -55,6 +55,7 @@ Window::Window(unsigned int width, unsigned int height, const std::string& title
     glfwMakeContextCurrent(window);
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
     glfwSetKeyCallback(window, handleKeys);
     glfwSetCursorPosCallback(window, handleMouse);
 }

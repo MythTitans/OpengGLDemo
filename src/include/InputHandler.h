@@ -26,6 +26,7 @@ private:
 	bool firstMouseMovement;
 
 	static constexpr float CAMERA_MOVE_SPEED = 5.0f;
-	static constexpr float CAMERA_LOOK_SPEED = 0.5f;
+	static constexpr float CAMERA_HORIZONTAL_LOOK_SPEED = 3.0f;
+	static constexpr float CAMERA_VERTICAL_LOOK_SPEED = 1.5f;
 };
 

@@ -1,3 +1,0 @@
-/home/eric/workspace/personal/opengl_demo/cmake-build-debug-local/CMakeFiles/edit_cache.dir
-/home/eric/workspace/personal/opengl_demo/cmake-build-debug-local/CMakeFiles/rebuild_cache.dir
-/home/eric/workspace/personal/opengl_demo/cmake-build-debug-local/CMakeFiles/opengl_demo.dir
