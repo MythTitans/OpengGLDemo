@@ -15,7 +15,7 @@ CubeMap::CubeMap(std::array<unsigned char*, 6> data, int width, int height)
 
     for (int i = 0; i < data.size(); ++i)
     {
-        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data[i]);
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data[i]);
     }
 
     glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
