@@ -30,8 +30,8 @@ RenderSystem::RenderSystem(const Window& window) : displayWidth{window.getFrameb
     directionalShadowMapShader = std::make_unique<DirectionalShadowMapShader>();
     emissiveShader = std::make_unique<EmissiveShader>();
     combineEmissiveShader = std::make_unique<CombineEmissiveShader>();
-    colorRT = std::make_unique<RenderTarget>(displayWidth, displayHeight);
-    emissiveRT = std::make_unique<RenderTarget>(displayWidth, displayHeight);
+    colorRT = std::make_unique<RenderTarget>(displayWidth, displayHeight, true);
+    emissiveRT = std::make_unique<RenderTarget>(displayWidth, displayHeight, true);
     renderSurface = createRenderSurface();
 }
 

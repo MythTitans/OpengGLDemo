@@ -7,7 +7,7 @@
 class RenderTarget
 {
   public:
-    RenderTarget(unsigned int width, unsigned int height);
+    RenderTarget(unsigned int width, unsigned int height, bool depth);
     RenderTarget(const RenderTarget&) = delete;
     RenderTarget& operator=(const RenderTarget&) = delete;
     RenderTarget(RenderTarget&& reference) noexcept;
@@ -24,6 +24,11 @@ class RenderTarget
         return height;
     }
 
+    inline bool hasDepth() const
+    {
+        return depth;
+    }
+
     void useTarget() const;
     void unuseTarget() const;
     void use(unsigned int textureUnit) const;
@@ -32,6 +37,7 @@ class RenderTarget
   private:
     unsigned int width;
     unsigned int height;
+    bool depth;
     GLuint fbo;
     std::array<GLuint, 2> textureIds;
 };

@@ -2,9 +2,16 @@
 
 #include <stdexcept>
 
-RenderTarget::RenderTarget(unsigned int width, unsigned int height) : width{width}, height{height}
+RenderTarget::RenderTarget(unsigned int width, unsigned int height, bool depth) : width{width}, height{height}, depth{depth}
 {
-    glGenTextures(2, textureIds.data());
+    if (depth)
+    {
+        glGenTextures(2, textureIds.data());
+    }
+    else
+    {
+        glGenTextures(1, textureIds.data());
+    }
 
     glBindTexture(GL_TEXTURE_2D, textureIds[0]);
 
@@ -15,14 +22,17 @@ RenderTarget::RenderTarget(unsigned int width, unsigned int height) : width{widt
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
 
-    glBindTexture(GL_TEXTURE_2D, textureIds[1]);
+    if (depth)
+    {
+        glBindTexture(GL_TEXTURE_2D, textureIds[1]);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+    }
 
     glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -31,7 +41,11 @@ RenderTarget::RenderTarget(unsigned int width, unsigned int height) : width{widt
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureIds[0], 0);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, textureIds[1], 0);
+
+    if (depth)
+    {
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, textureIds[1], 0);
+    }
 
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
     {
@@ -42,10 +56,11 @@ RenderTarget::RenderTarget(unsigned int width, unsigned int height) : width{widt
 }
 
 RenderTarget::RenderTarget(RenderTarget&& reference) noexcept
-    : width{reference.width}, height{reference.height}, fbo{reference.fbo}, textureIds{reference.textureIds}
+    : width{reference.width}, height{reference.height}, depth{reference.depth}, fbo{reference.fbo}, textureIds{reference.textureIds}
 {
     reference.width = 0;
     reference.height = 0;
+    reference.depth = false;
     reference.fbo = 0;
     reference.textureIds = {0, 0};
 }
@@ -56,10 +71,12 @@ RenderTarget& RenderTarget::operator=(RenderTarget&& reference) noexcept
     {
         this->width = reference.width;
         this->height = reference.height;
+        this->depth = reference.depth;
         this->fbo = reference.fbo;
         this->textureIds = reference.textureIds;
         reference.width = 0;
         reference.height = 0;
+        reference.depth = false;
         reference.fbo = 0;
         reference.textureIds = {0, 0};
     }
@@ -70,7 +87,15 @@ RenderTarget& RenderTarget::operator=(RenderTarget&& reference) noexcept
 RenderTarget::~RenderTarget()
 {
     glDeleteFramebuffers(1, &fbo);
-    glDeleteTextures(2, textureIds.data());
+
+    if(depth)
+    {
+        glDeleteTextures(2, textureIds.data());
+    }
+    else
+    {
+        glDeleteTextures(1, textureIds.data());
+    }
 }
 
 void RenderTarget::useTarget() const
