@@ -22,6 +22,8 @@ class Model
 
     static std::shared_ptr<Model> loadModel(std::filesystem::path filePath);
 
+    static std::shared_ptr<Model> loadModel(std::filesystem::path filePath, std::vector<std::shared_ptr<Material>> materials);
+
     inline const std::vector<const Mesh*>& getOpaqueMeshes() const
     {
         return opaqueMeshes;

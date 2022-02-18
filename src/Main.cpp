@@ -31,9 +31,21 @@ int main(void)
         std::shared_ptr<Model> ground = createGround(50.0f);
 
         auto golemModel = Model::loadModel("../../resources/models/golem/Earth_Golem_OBJ.obj");
+        auto redSphereMat = std::make_shared<Material>(glm::vec3{}, glm::vec3{1, 0.25, 0.25}, glm::vec3{}, 0, 1, nullptr, nullptr, nullptr, nullptr, 1);
+        auto redSphereModel = Model::loadModel("../../resources/models/sphere/sphere.obj", {redSphereMat, redSphereMat});
+        auto blueSphereMat = std::make_shared<Material>(glm::vec3{}, glm::vec3{0.25, 0.25, 1}, glm::vec3{}, 0, 1, nullptr, nullptr, nullptr, nullptr, 1);
+        auto blueSphereModel = Model::loadModel("../../resources/models/sphere/sphere.obj", {blueSphereMat, blueSphereMat});
 
         Entity golem{golemModel};
         golem.setYaw(180);
+
+        Entity redSphere{redSphereModel};
+        redSphere.setPosition({5, 3, 0});
+        redSphere.setScale({0.25, 0.25, 0.25});
+
+        Entity blueSphere{blueSphereModel};
+        blueSphere.setPosition({-5, 3, 0});
+        blueSphere.setScale({0.25, 0.25, 0.25});
 
         Entity groundEntity{ground};
 
@@ -45,13 +57,15 @@ int main(void)
                                                             "../../resources/textures/skybox/back.png"};
 
         Scene scene{CubeMap::loadCubeMap(skyboxFaces)};
-        scene.setAmbientColor({0.1f, 0.1f, 0.1f});
+        scene.setAmbientColor({0.1, 0.1, 0.1});
         scene.addEntity(&groundEntity);
         scene.addEntity(&golem);
-        scene.addLight(Light::directionalLight(1.0f, {0.15f, 0.3f, 0.6f}, {-10.0f, 10.0f, 10.0f}, {1.0f, -1.0f, -1.0f}));
-        scene.addLight(Light::pointLight(2.0f, {1.0f, 0.25f, 0.25f}, {5.0f, 3.0f, 0.0f}, 0.3f, 0.2f, 0.1f));
-//        scene.addLight(Light::spotLight(1.0f, {1.0f, 0.0f, 1.0f}, {-5.0f, 3.0f, 0.0f}, {2.0f, -1.0f, 0.0f}, 0.1f, 0.1f, 0.1f, glm::radians(90.0f)));
-        scene.addLight(Light::pointLight(2.0f, {0.25f, 0.25f, 1.0f}, {-5.0f, 3.0f, 0.0f}, 0.3f, 0.2f, 0.1f));
+        scene.addEntity(&redSphere);
+        scene.addEntity(&blueSphere);
+        scene.addLight(Light::directionalLight(1, {0.15, 0.3, 0.6}, {-10, 10, 10}, {1, -1, -1}));
+        scene.addLight(Light::pointLight(2, {1, 0.25, 0.25}, {5, 3, 0}, 0.3, 0.2, 0.1));
+        //        scene.addLight(Light::spotLight(1.0f, {1.0f, 0.0f, 1.0f}, {-5.0f, 3.0f, 0.0f}, {2.0f, -1.0f, 0.0f}, 0.1f, 0.1f, 0.1f, glm::radians(90.0f)));
+        scene.addLight(Light::pointLight(2, {0.25, 0.25, 1}, {-5, 3, 0}, 0.3, 0.2, 0.1));
 
         auto previousTime = std::chrono::steady_clock::now();
 

@@ -61,6 +61,23 @@ std::shared_ptr<Model> Model::loadModel(std::filesystem::path filePath)
     return std::make_unique<Model>(std::move(meshes), std::move(materials));
 }
 
+std::shared_ptr<Model> Model::loadModel(std::filesystem::path filePath, std::vector<std::shared_ptr<Material>> materials)
+{
+    Assimp::Importer importer;
+
+    auto* scene = importer.ReadFile(filePath.string(),
+                                    aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices |
+                                        aiProcess_CalcTangentSpace);
+    if (!scene)
+    {
+        throw std::runtime_error("Failed to load model " + filePath.string());
+    }
+
+    auto meshes = loadMeshes(scene->mRootNode, scene, materials);
+
+    return std::make_unique<Model>(std::move(meshes), std::move(materials));
+}
+
 std::vector<std::shared_ptr<Mesh>> Model::loadMeshes(aiNode* node, const aiScene* scene, const std::vector<std::shared_ptr<Material>>& materials)
 {
     std::vector<std::shared_ptr<Mesh>> meshes;

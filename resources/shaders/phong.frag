@@ -201,6 +201,6 @@ void main()
 	vec3 ambientColor = computeAmbientColor();
 	vec3 lightColor = computeDirectionalLights() + computePointLights() + computeSpotLights();
 
-	vec3 color = (ambientColor + lightColor) * texture(material.diffuseMap, texCoords).xyz + material.emissivePower * texture(material.emissiveMap, texCoords).xyz;
+	vec3 color = (ambientColor + lightColor) * texture(material.diffuseMap, texCoords).xyz + material.diffuseColor * material.emissivePower * texture(material.emissiveMap, texCoords).xyz;
 	finalColor = vec4(color, material.opacity);
 }
