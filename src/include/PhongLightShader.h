@@ -9,8 +9,6 @@
 #include "MaterialShader.h"
 #include "ShadowMap.h"
 
-class ResourceLoader;
-
 struct UniformDirectionalLight
 {
     GLuint intensityLocation;
@@ -46,11 +44,9 @@ struct UniformMaterial
     GLuint diffuseColorLocation;
     GLuint specularColorLocation;
     GLuint specularPowerLocation;
-    GLuint emissivePowerLocation;
     GLuint diffuseMapLocation;
     GLuint normalMapLocation;
     GLuint specularMapLocation;
-    GLuint emissiveMapLocation;
     GLuint opacityLocation;
 };
 
@@ -78,7 +74,6 @@ class PhongLightShader : public MaterialShader
     std::unique_ptr<Texture> dummyDiffuse;
     std::unique_ptr<Texture> dummyNormal;
     std::unique_ptr<Texture> dummySpecular;
-    std::unique_ptr<Texture> dummyEmissive;
 
     GLuint uniformProjectionLocation;
     GLuint uniformViewLocation;
@@ -94,6 +89,4 @@ class PhongLightShader : public MaterialShader
     GLuint uniformPointLightCount;
     GLuint uniformSpotLightCount;
     UniformMaterial uniformMaterial;
-
-    glm::vec3 ambientColor;
 };

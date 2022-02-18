@@ -28,6 +28,11 @@ class Mesh
         return material ? material->isTransparent() : false;
     }
 
+    inline bool isEmissive() const
+    {
+        return material ? material->isEmissive() : false;
+    }
+
     static constexpr int VERTEX_COMPONENTS = 14;
 
   private:

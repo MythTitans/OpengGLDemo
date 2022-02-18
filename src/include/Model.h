@@ -34,9 +34,19 @@ class Model
         return transparentMeshes;
     }
 
+    inline const std::vector<const Mesh*>& getEmissiveMeshes() const
+    {
+        return emissiveMeshes;
+    }
+
     inline const bool hasTransparentMeshes() const
     {
         return transparentMeshes.size() > 0;
+    }
+
+    inline const bool hasEmissiveMeshes() const
+    {
+        return emissiveMeshes.size() > 0;
     }
 
   private:
@@ -44,8 +54,9 @@ class Model
     std::vector<std::shared_ptr<Material>> materials;
     std::vector<const Mesh*> opaqueMeshes;
     std::vector<const Mesh*> transparentMeshes;
+    std::vector<const Mesh*> emissiveMeshes;
 
-    void filterTransparentMeshes();
+    void detectSpecialMeshes();
 
     static std::vector<std::shared_ptr<Mesh>> loadMeshes(aiNode* node, const aiScene* scene, const std::vector<std::shared_ptr<Material>>& materials);
     static std::shared_ptr<Mesh> loadMesh(aiMesh* mesh, const std::vector<std::shared_ptr<Material>>& materials);

@@ -7,12 +7,12 @@
 Model::Model(std::vector<std::shared_ptr<Mesh>>&& meshes, std::vector<std::shared_ptr<Material>>&& materials)
     : meshes{std::move(meshes)}, materials{std::move(materials)}
 {
-    filterTransparentMeshes();
+    detectSpecialMeshes();
 }
 
 Model::Model(Model&& reference) noexcept : meshes{std::move(reference.meshes)}, materials{std::move(reference.materials)}
 {
-    filterTransparentMeshes();
+    detectSpecialMeshes();
 }
 
 Model& Model::operator=(Model&& reference) noexcept
@@ -23,12 +23,12 @@ Model& Model::operator=(Model&& reference) noexcept
         this->materials = std::move(reference.materials);
     }
 
-    filterTransparentMeshes();
+    detectSpecialMeshes();
 
     return *this;
 }
 
-void Model::filterTransparentMeshes()
+void Model::detectSpecialMeshes()
 {
     for (const auto& mesh : this->meshes)
     {
@@ -39,6 +39,11 @@ void Model::filterTransparentMeshes()
         else
         {
             opaqueMeshes.push_back(mesh.get());
+        }
+
+        if (mesh->isEmissive())
+        {
+            emissiveMeshes.push_back(mesh.get());
         }
     }
 }
@@ -237,6 +242,7 @@ std::vector<std::shared_ptr<Material>> Model::loadMaterials(const aiScene* scene
         materials[i] = std::make_unique<Material>(colorToGlm(ambientColor),
                                                   colorToGlm(diffuseColor),
                                                   colorToGlm(specularColor),
+                                                  glm::vec3{1, 1, 1},
                                                   specularPower,
                                                   emissivePower,
                                                   std::move(diffuseMap),
