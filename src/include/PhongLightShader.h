@@ -58,11 +58,11 @@ class PhongLightShader : public MaterialShader
     void setProjection(const glm::mat4& projection) const;
     void setView(const glm::mat4& view) const;
     void setTransform(const glm::mat4& transform) const;
-    void setEye(const glm::vec3& eye);
-    void setAmbientColor(const glm::vec3& ambientColor);
-    void setDirectionalLights(const std::vector<Light>& directionalLights, const std::vector<ShadowMap>& directionalLightShadowMaps);
-    void setPointLights(const std::vector<Light>& pointLights);
-    void setSpotLights(const std::vector<Light>& spotLights);
+    void setEye(const glm::vec3& eye) const;
+    void setAmbientColor(const glm::vec3& ambientColor) const;
+    void setDirectionalLights(const std::vector<Light>& directionalLights, const std::vector<ShadowMap>& directionalLightShadowMaps) const;
+    void setPointLights(const std::vector<Light>& pointLights) const;
+    void setSpotLights(const std::vector<Light>& spotLights) const;
     void useMaterial(const Material* material) const override;
     void unuseMaterial(const Material* material) const override;
 

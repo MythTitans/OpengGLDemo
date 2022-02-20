@@ -83,17 +83,17 @@ void PhongLightShader::setTransform(const glm::mat4& transform) const
     glUniformMatrix4fv(uniformTransformLocation, 1, GL_FALSE, glm::value_ptr(transform));
 }
 
-void PhongLightShader::setEye(const glm::vec3& eye)
+void PhongLightShader::setEye(const glm::vec3& eye) const
 {
     glUniform3fv(uniformEyePositionLocation, 1, glm::value_ptr(eye));
 }
 
-void PhongLightShader::setAmbientColor(const glm::vec3& ambientColor)
+void PhongLightShader::setAmbientColor(const glm::vec3& ambientColor) const
 {
     glUniform3fv(uniformAmbientColorLocation, 1, glm::value_ptr(ambientColor));
 }
 
-void PhongLightShader::setDirectionalLights(const std::vector<Light>& directionalLights, const std::vector<ShadowMap>& directionalLightShadowMaps)
+void PhongLightShader::setDirectionalLights(const std::vector<Light>& directionalLights, const std::vector<ShadowMap>& directionalLightShadowMaps) const
 {
     if (directionalLights.size() > MAX_DIRECTIONAL_LIGHTS)
     {
@@ -105,7 +105,7 @@ void PhongLightShader::setDirectionalLights(const std::vector<Light>& directiona
     for (size_t i = 0; i < directionalLights.size(); ++i)
     {
         const Light& light = directionalLights[i];
-        UniformDirectionalLight& uniformLight = uniformDirectionalLights[i];
+        const UniformDirectionalLight& uniformLight = uniformDirectionalLights[i];
 
         glUniform1f(uniformLight.intensityLocation, light.getIntensity());
         glUniform3fv(uniformLight.colorLocation, 1, glm::value_ptr(light.getColor()));
@@ -118,7 +118,7 @@ void PhongLightShader::setDirectionalLights(const std::vector<Light>& directiona
     }
 }
 
-void PhongLightShader::setPointLights(const std::vector<Light>& pointLights)
+void PhongLightShader::setPointLights(const std::vector<Light>& pointLights) const
 {
     if (pointLights.size() > MAX_POINT_LIGHTS)
     {
@@ -141,7 +141,7 @@ void PhongLightShader::setPointLights(const std::vector<Light>& pointLights)
     }
 }
 
-void PhongLightShader::setSpotLights(const std::vector<Light>& spotLights)
+void PhongLightShader::setSpotLights(const std::vector<Light>& spotLights) const
 {
     if (spotLights.size() >= MAX_SPOT_LIGHTS)
     {

@@ -2,7 +2,7 @@
 
 #include "include/Shader.h"
 
-Mesh::Mesh(const std::vector<GLfloat>& vertices, const std::vector<GLuint> indices, const Material* material)
+Mesh::Mesh(const std::vector<GLfloat>& vertices, const std::vector<GLuint>& indices, const Material* material)
     : indexCount{(GLsizei)indices.size()}, material{material}
 {
     glGenVertexArrays(1, &vao);
@@ -12,7 +12,7 @@ Mesh::Mesh(const std::vector<GLfloat>& vertices, const std::vector<GLuint> indic
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * VERTEX_COMPONENTS, 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * VERTEX_COMPONENTS, nullptr);
     glEnableVertexAttribArray(0);
 
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * VERTEX_COMPONENTS, (void*)(sizeof(vertices[0]) * 3));
@@ -42,12 +42,13 @@ Mesh::Mesh(Mesh&& reference) noexcept
     vbo = reference.vbo;
     ibo = reference.ibo;
     indexCount = reference.indexCount;
-    material = std::move(reference.material);
+    material = reference.material;
 
     reference.vao = 0;
     reference.vbo = 0;
     reference.ibo = 0;
     reference.indexCount = 0;
+    reference.material = nullptr;
 }
 
 Mesh& Mesh::operator=(Mesh&& reference) noexcept
@@ -58,12 +59,13 @@ Mesh& Mesh::operator=(Mesh&& reference) noexcept
         vbo = reference.vbo;
         ibo = reference.ibo;
         indexCount = reference.indexCount;
-        material = std::move(reference.material);
+        material = reference.material;
 
         reference.vao = 0;
         reference.vbo = 0;
         reference.ibo = 0;
         reference.indexCount = 0;
+        reference.material = nullptr;
     }
 
     return *this;

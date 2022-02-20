@@ -11,12 +11,12 @@ DirectionalShadowMapShader::DirectionalShadowMapShader()
 {
 }
 
-void DirectionalShadowMapShader::setTransform(const glm::mat4& model)
+void DirectionalShadowMapShader::setTransform(const glm::mat4& model) const
 {
     glUniformMatrix4fv(uniformTransformLocation, 1, GL_FALSE, glm::value_ptr(model));
 }
 
-void DirectionalShadowMapShader::setLightTransform(const glm::mat4& lightTransform)
+void DirectionalShadowMapShader::setLightTransform(const glm::mat4& lightTransform) const
 {
     glUniformMatrix4fv(uniformLightTransformLocation, 1, GL_FALSE, glm::value_ptr(lightTransform));
 }

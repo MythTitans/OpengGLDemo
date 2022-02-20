@@ -13,7 +13,7 @@ class Shader;
 class Mesh
 {
   public:
-    Mesh(const std::vector<GLfloat>& vertices, const std::vector<GLuint> indices, const Material* material);
+    Mesh(const std::vector<GLfloat>& vertices, const std::vector<GLuint>& indices, const Material* material);
     Mesh(const Mesh&) = delete;
     Mesh& operator=(const Mesh&) = delete;
     Mesh(Mesh&& reference) noexcept;

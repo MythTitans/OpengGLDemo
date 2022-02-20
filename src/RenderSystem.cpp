@@ -11,28 +11,23 @@
 #include "include/Scene.h"
 #include "include/Window.h"
 
-RenderSystem::RenderSystem(const Window& window) : displayWidth{window.getFramebufferWidth()}, displayHeight{window.getFramebufferHeight()}
+RenderSystem::RenderSystem(const Window& window)
+    : displayWidth{window.getFramebufferWidth()},
+      displayHeight{window.getFramebufferHeight()},
+      glewInitializer{},
+      phongLightShader{},
+      skyboxShader{},
+      directionalShadowMapShader{},
+      emissiveShader{},
+      combineEmissiveShader{},
+      colorRT(displayWidth, displayHeight, true),
+      emissiveRT(displayWidth, displayHeight, true),
+      renderSurface{createRenderSurface()}
 {
-    glewExperimental = GL_TRUE;
-
-    if (glewInit() != GLEW_OK)
-    {
-        throw std::runtime_error("Error initializing GLEW !");
-    }
-
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
 
     glClearColor(0, 0, 0, 1);
-
-    phongLightShader = std::make_unique<PhongLightShader>();
-    skyboxShader = std::make_unique<SkyboxShader>();
-    directionalShadowMapShader = std::make_unique<DirectionalShadowMapShader>();
-    emissiveShader = std::make_unique<EmissiveShader>();
-    combineEmissiveShader = std::make_unique<CombineEmissiveShader>();
-    colorRT = std::make_unique<RenderTarget>(displayWidth, displayHeight, true);
-    emissiveRT = std::make_unique<RenderTarget>(displayWidth, displayHeight, true);
-    renderSurface = createRenderSurface();
 }
 
 void RenderSystem::render(const Scene& scene, const Camera& camera) const
@@ -45,18 +40,18 @@ void RenderSystem::render(const Scene& scene, const Camera& camera) const
     glViewport(0, 0, displayWidth, displayHeight);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    combineEmissiveShader->use();
-    combineEmissiveShader->useRenderTargets(*colorRT, *emissiveRT);
+    combineEmissiveShader.use();
+    combineEmissiveShader.useRenderTargets(colorRT, emissiveRT);
 
-    renderSurface->render();
+    renderSurface.render();
 
-    combineEmissiveShader->unuseRenderTargets(*colorRT, *emissiveRT);
-    combineEmissiveShader->unuse();
+    combineEmissiveShader.unuseRenderTargets(colorRT, emissiveRT);
+    combineEmissiveShader.unuse();
 }
 
 void RenderSystem::computeDirectionalShadowMaps(const Scene& scene) const
 {
-    directionalShadowMapShader->use();
+    directionalShadowMapShader.use();
 
     for (int i = 0; i < scene.getDirectionalLights().size(); ++i)
     {
@@ -69,11 +64,11 @@ void RenderSystem::computeDirectionalShadowMaps(const Scene& scene) const
 
         glClear(GL_DEPTH_BUFFER_BIT);
 
-        directionalShadowMapShader->setLightTransform(light.computeLightTransform()[0]);
+        directionalShadowMapShader.setLightTransform(light.computeLightTransform()[0]);
 
         for (const auto& entity : scene.getEntities())
         {
-            directionalShadowMapShader->setTransform(entity->computeTransform());
+            directionalShadowMapShader.setTransform(entity->computeTransform());
             auto* model = entity->getModel();
             if (model)
             {
@@ -87,43 +82,43 @@ void RenderSystem::computeDirectionalShadowMaps(const Scene& scene) const
         shadowMap.unuseTarget();
     }
 
-    directionalShadowMapShader->unuse();
+    directionalShadowMapShader.unuse();
 }
 
 void RenderSystem::renderColor(const Scene& scene, const Camera& camera) const
 {
-    glViewport(0, 0, colorRT->getWidth(), colorRT->getHeight());
+    glViewport(0, 0, colorRT.getWidth(), colorRT.getHeight());
 
-    colorRT->useTarget();
+    colorRT.useTarget();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    skyboxShader->use();
-    skyboxShader->setProjection(camera.getProjection());
-    skyboxShader->setView(camera.getView());
+    skyboxShader.use();
+    skyboxShader.setProjection(camera.getProjection());
+    skyboxShader.setView(camera.getView());
 
-    scene.getSkybox().render(*skyboxShader);
-    skyboxShader->unuse();
+    scene.getSkybox().render(skyboxShader);
+    skyboxShader.unuse();
 
-    phongLightShader->use();
-    phongLightShader->setProjection(camera.getProjection());
-    phongLightShader->setView(camera.getView());
-    phongLightShader->setEye(camera.getPosition());
-    phongLightShader->setAmbientColor(scene.getAmbientColor());
-    phongLightShader->setDirectionalLights(scene.getDirectionalLights(), scene.getDirectionalLightShadowMaps());
-    phongLightShader->setPointLights(scene.getPointLights());
-    phongLightShader->setSpotLights(scene.getSpotLights());
+    phongLightShader.use();
+    phongLightShader.setProjection(camera.getProjection());
+    phongLightShader.setView(camera.getView());
+    phongLightShader.setEye(camera.getPosition());
+    phongLightShader.setAmbientColor(scene.getAmbientColor());
+    phongLightShader.setDirectionalLights(scene.getDirectionalLights(), scene.getDirectionalLightShadowMaps());
+    phongLightShader.setPointLights(scene.getPointLights());
+    phongLightShader.setSpotLights(scene.getSpotLights());
 
     std::vector<const Entity*> transparentEntities;
     for (const auto& entity : scene.getEntities())
     {
-        phongLightShader->setTransform(entity->computeTransform());
+        phongLightShader.setTransform(entity->computeTransform());
         auto* model = entity->getModel();
         if (model)
         {
             for (const auto* mesh : model->getOpaqueMeshes())
             {
-                mesh->render(*phongLightShader);
+                mesh->render(phongLightShader);
             }
 
             if (model->hasTransparentMeshes())
@@ -147,55 +142,55 @@ void RenderSystem::renderColor(const Scene& scene, const Camera& camera) const
 
     for (const auto* entity : transparentEntities)
     {
-        phongLightShader->setTransform(entity->computeTransform());
+        phongLightShader.setTransform(entity->computeTransform());
         auto* model = entity->getModel();
         if (model)
         {
             for (const auto* mesh : entity->getModel()->getTransparentMeshes())
             {
-                mesh->render(*phongLightShader);
+                mesh->render(phongLightShader);
             }
         }
     }
 
     glDisable(GL_BLEND);
 
-    colorRT->unuseTarget();
+    colorRT.unuseTarget();
 
-    phongLightShader->unuse();
+    phongLightShader.unuse();
 }
 
 void RenderSystem::renderEmissive(const Scene& scene, const Camera& camera) const
 {
-    glViewport(0, 0, emissiveRT->getWidth(), emissiveRT->getHeight());
+    glViewport(0, 0, emissiveRT.getWidth(), emissiveRT.getHeight());
 
-    emissiveRT->useTarget();
+    emissiveRT.useTarget();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    emissiveShader->use();
-    emissiveShader->setProjection(camera.getProjection());
-    emissiveShader->setView(camera.getView());
+    emissiveShader.use();
+    emissiveShader.setProjection(camera.getProjection());
+    emissiveShader.setView(camera.getView());
 
     for (const auto& entity : scene.getEntities())
     {
-        emissiveShader->setTransform(entity->computeTransform());
+        emissiveShader.setTransform(entity->computeTransform());
         auto* model = entity->getModel();
         if (model)
         {
             for (const auto* mesh : model->getEmissiveMeshes())
             {
-                mesh->render(*emissiveShader);
+                mesh->render(emissiveShader);
             }
         }
     }
 
-    emissiveRT->unuseTarget();
+    emissiveRT.unuseTarget();
 
-    emissiveShader->unuse();
+    emissiveShader.unuse();
 }
 
-std::unique_ptr<Mesh> RenderSystem::createRenderSurface()
+Mesh RenderSystem::createRenderSurface()
 {
     std::vector<GLfloat> vertices{
         // clang-format off
@@ -213,5 +208,15 @@ std::unique_ptr<Mesh> RenderSystem::createRenderSurface()
         // clang-format on
     };
 
-    return std::make_unique<Mesh>(std::move(vertices), std::move(indices), nullptr);
+    return Mesh{vertices, indices, nullptr};
+}
+
+GlewInitializer::GlewInitializer()
+{
+    glewExperimental = GL_TRUE;
+
+    if (glewInit() != GLEW_OK)
+    {
+        throw std::runtime_error("Error initializing GLEW !");
+    }
 }
