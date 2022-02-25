@@ -19,14 +19,14 @@
 
 std::unique_ptr<Model> createGround(float size);
 
-int main(void)
+int main()
 {
     try
     {
         Window window{1920, 1080, "OpenGL Tech Demo"};
         Camera camera{{0, 0, -10}, 0, 0, glm::radians(60.0f), window.getAspectRatio(), 0.1f, 1000};
-        InputHandler inputHandler{window, camera};
         RenderSystem renderer{window};
+        InputHandler inputHandler{window, camera, renderer};
 
         std::shared_ptr<Model> ground = createGround(50.0f);
 

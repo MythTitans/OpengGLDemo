@@ -29,20 +29,33 @@ RenderSystem::RenderSystem(const Window& window)
     glEnable(GL_CULL_FACE);
 
     glClearColor(0, 0, 0, 1);
+
+    features.fill(true);
 }
 
 void RenderSystem::render(const Scene& scene, const Camera& camera) const
 {
     computeDirectionalShadowMaps(scene);
 
+    glViewport(0, 0, displayWidth, displayHeight);
+
     renderColor(scene, camera);
     renderEmissive(scene, camera);
-    blurEmissive(15);
+    blurEmissive(10);
 
-    glViewport(0, 0, displayWidth, displayHeight);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     blendColorEmissive();
+}
+
+void RenderSystem::setFeatureEnabled(RenderFeature feature, bool enabled)
+{
+    features[static_cast<int>(feature)] = enabled;
+}
+
+bool RenderSystem::isFeatureEnabled(RenderFeature feature) const
+{
+    return features[static_cast<int>(feature)];
 }
 
 void RenderSystem::computeDirectionalShadowMaps(const Scene& scene) const
@@ -83,8 +96,6 @@ void RenderSystem::computeDirectionalShadowMaps(const Scene& scene) const
 
 void RenderSystem::renderColor(const Scene& scene, const Camera& camera) const
 {
-    glViewport(0, 0, colorRT.getWidth(), colorRT.getHeight());
-
     colorRT.useTarget();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -158,36 +169,42 @@ void RenderSystem::renderColor(const Scene& scene, const Camera& camera) const
 
 void RenderSystem::renderEmissive(const Scene& scene, const Camera& camera) const
 {
-    glViewport(0, 0, emissiveRT.getWidth(), emissiveRT.getHeight());
-
     emissiveRT.useTarget();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    emissiveShader.use();
-    emissiveShader.setProjection(camera.getProjection());
-    emissiveShader.setView(camera.getView());
-
-    for (const auto& entity : scene.getEntities())
+    if (isFeatureEnabled(RenderFeature::EMISSIVE_MAP))
     {
-        emissiveShader.setTransform(entity->computeTransform());
-        auto* model = entity->getModel();
-        if (model)
+        emissiveShader.use();
+        emissiveShader.setProjection(camera.getProjection());
+        emissiveShader.setView(camera.getView());
+
+        for (const auto& entity : scene.getEntities())
         {
-            for (const auto* mesh : model->getEmissiveMeshes())
+            emissiveShader.setTransform(entity->computeTransform());
+            auto* model = entity->getModel();
+            if (model)
             {
-                mesh->render(emissiveShader);
+                for (const auto* mesh : model->getEmissiveMeshes())
+                {
+                    mesh->render(emissiveShader);
+                }
             }
         }
+
+        emissiveShader.unuse();
     }
 
     emissiveRT.unuseTarget();
-
-    emissiveShader.unuse();
 }
 
 void RenderSystem::blurEmissive(int iterations) const
 {
+    if (!isFeatureEnabled(RenderFeature::GLOW_EFFECT))
+    {
+        return;
+    }
+
     const std::array<RenderTarget, 2> blurRT = {RenderTarget(displayWidth, displayHeight, false), RenderTarget(displayWidth, displayHeight, false)};
     const int twoPassIterations = 2 * iterations;
 

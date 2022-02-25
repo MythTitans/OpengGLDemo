@@ -4,11 +4,12 @@
 
 class Window;
 class Camera;
+class RenderSystem;
 
 class InputHandler
 {
   public:
-    InputHandler(Window& window, Camera& camera);
+    InputHandler(Window& window, Camera& camera, RenderSystem& renderSystem);
 
     void processInputs();
     void handleKeyPressed(int keyCode);
@@ -16,8 +17,12 @@ class InputHandler
     void handleMouseMoved(double x, double y);
 
   private:
+    void handleFeatureSelection(int keyCode) const;
+
+  private:
     Window& window;
     Camera& camera;
+    RenderSystem& renderSystem;
     std::vector<bool> inputsMap;
     double horizontalMouseDelta;
     double verticalMouseDelta;
