@@ -19,7 +19,7 @@ RenderSystem::RenderSystem(const Window& window)
       skyboxShader{},
       directionalShadowMapShader{},
       emissiveShader{},
-      combineEmissiveShader{},
+      blendColorEmissiveShader{},
       colorRT(displayWidth, displayHeight, true),
       emissiveRT(displayWidth, displayHeight, true),
       renderSurface{createRenderSurface()}
@@ -40,13 +40,13 @@ void RenderSystem::render(const Scene& scene, const Camera& camera) const
     glViewport(0, 0, displayWidth, displayHeight);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    combineEmissiveShader.use();
-    combineEmissiveShader.useRenderTargets(colorRT, emissiveRT);
+    blendColorEmissiveShader.use();
+    blendColorEmissiveShader.useRenderTargets(colorRT, emissiveRT);
 
     renderSurface.render();
 
-    combineEmissiveShader.unuseRenderTargets(colorRT, emissiveRT);
-    combineEmissiveShader.unuse();
+    blendColorEmissiveShader.unuseRenderTargets(colorRT, emissiveRT);
+    blendColorEmissiveShader.unuse();
 }
 
 void RenderSystem::computeDirectionalShadowMaps(const Scene& scene) const

@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "CombineEmissiveShader.h"
+#include "BlendShader.h"
 #include "DirectionalShadowMapShader.h"
 #include "EmissiveShader.h"
 #include "Mesh.h"
@@ -37,12 +37,12 @@ class RenderSystem
   private:
     int displayWidth;
     int displayHeight;
-    [[maybe_unused]] GlewInitializer glewInitializer;
+    GlewInitializer glewInitializer;
     PhongLightShader phongLightShader;
     SkyboxShader skyboxShader;
     DirectionalShadowMapShader directionalShadowMapShader;
     EmissiveShader emissiveShader;
-    CombineEmissiveShader combineEmissiveShader;
+    BlendShader blendColorEmissiveShader;
     RenderTarget colorRT;
     RenderTarget emissiveRT;
     Mesh renderSurface;

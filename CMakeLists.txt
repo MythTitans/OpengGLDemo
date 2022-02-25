@@ -12,7 +12,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_executable(opengl_demo
         src/Camera.cpp
-        src/CombineEmissiveShader.cpp
+        src/BlendShader.cpp
         src/CubeMap.cpp
         src/DirectionalShadowMapShader.cpp
         src/EmissiveShader.cpp
