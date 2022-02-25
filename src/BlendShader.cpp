@@ -9,7 +9,7 @@ BlendShader::BlendShader()
 {
 }
 
-void BlendShader::useRenderTargets(const RenderTarget& sourceA, const RenderTarget& sourceB) const
+void BlendShader::useSources(const RenderTarget& sourceA, const RenderTarget& sourceB) const
 {
     sourceA.use(0);
     sourceB.use(1);
@@ -18,7 +18,7 @@ void BlendShader::useRenderTargets(const RenderTarget& sourceA, const RenderTarg
     glUniform1i(uniformSourceBLocation, 1);
 }
 
-void BlendShader::unuseRenderTargets(const RenderTarget& sourceA, const RenderTarget& sourceB) const
+void BlendShader::unuseSources(const RenderTarget& sourceA, const RenderTarget& sourceB) const
 {
     sourceA.unuse();
     sourceB.unuse();

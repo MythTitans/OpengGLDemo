@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "BlendShader.h"
+#include "BlurShader.h"
 #include "DirectionalShadowMapShader.h"
 #include "EmissiveShader.h"
 #include "Mesh.h"
@@ -31,6 +32,8 @@ class RenderSystem
     void computeDirectionalShadowMaps(const Scene& scene) const;
     void renderColor(const Scene& scene, const Camera& camera) const;
     void renderEmissive(const Scene& scene, const Camera& camera) const;
+    void blurEmissive(int targetRT) const;
+    void blendColorEmissive() const;
 
     static Mesh createRenderSurface();
 
@@ -42,7 +45,8 @@ class RenderSystem
     SkyboxShader skyboxShader;
     DirectionalShadowMapShader directionalShadowMapShader;
     EmissiveShader emissiveShader;
-    BlendShader blendColorEmissiveShader;
+    BlurShader blurShader;
+    BlendShader blendShader;
     RenderTarget colorRT;
     RenderTarget emissiveRT;
     Mesh renderSurface;

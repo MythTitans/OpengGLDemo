@@ -19,7 +19,8 @@ RenderSystem::RenderSystem(const Window& window)
       skyboxShader{},
       directionalShadowMapShader{},
       emissiveShader{},
-      blendColorEmissiveShader{},
+      blurShader{},
+      blendShader{},
       colorRT(displayWidth, displayHeight, true),
       emissiveRT(displayWidth, displayHeight, true),
       renderSurface{createRenderSurface()}
@@ -36,17 +37,12 @@ void RenderSystem::render(const Scene& scene, const Camera& camera) const
 
     renderColor(scene, camera);
     renderEmissive(scene, camera);
+    blurEmissive(15);
 
     glViewport(0, 0, displayWidth, displayHeight);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    blendColorEmissiveShader.use();
-    blendColorEmissiveShader.useRenderTargets(colorRT, emissiveRT);
-
-    renderSurface.render();
-
-    blendColorEmissiveShader.unuseRenderTargets(colorRT, emissiveRT);
-    blendColorEmissiveShader.unuse();
+    blendColorEmissive();
 }
 
 void RenderSystem::computeDirectionalShadowMaps(const Scene& scene) const
@@ -188,6 +184,63 @@ void RenderSystem::renderEmissive(const Scene& scene, const Camera& camera) cons
     emissiveRT.unuseTarget();
 
     emissiveShader.unuse();
+}
+
+void RenderSystem::blurEmissive(int iterations) const
+{
+    const std::array<RenderTarget, 2> blurRT = {RenderTarget(displayWidth, displayHeight, false), RenderTarget(displayWidth, displayHeight, false)};
+    const int twoPassIterations = 2 * iterations;
+
+    const auto applyBlur = [this](const RenderTarget& source, const RenderTarget& target, bool horizontal)
+    {
+        blurShader.setHorizontal(horizontal);
+
+        source.use(0);
+
+        target.useTarget();
+        renderSurface.render();
+        target.unuseTarget();
+
+        source.unuse();
+    };
+
+    blurShader.use();
+
+    applyBlur(emissiveRT, blurRT[1], true);
+
+    for (int i = 1; i < twoPassIterations; ++i)
+    {
+        const int indexRT = i % 2;
+        const bool horizontal = indexRT == 0;
+
+        const RenderTarget& source = blurRT[indexRT];
+        const RenderTarget& target = blurRT[1 - indexRT];
+
+        applyBlur(source, target, horizontal);
+    }
+
+    blurShader.unuse();
+
+    blendShader.use();
+    blendShader.useSources(emissiveRT, blurRT[0]);
+
+    emissiveRT.useTarget();
+    renderSurface.render();
+    emissiveRT.unuseTarget();
+
+    blendShader.unuseSources(emissiveRT, blurRT[0]);
+    blendShader.unuse();
+}
+
+void RenderSystem::blendColorEmissive() const
+{
+    blendShader.use();
+    blendShader.useSources(colorRT, emissiveRT);
+
+    renderSurface.render();
+
+    blendShader.unuseSources(colorRT, emissiveRT);
+    blendShader.unuse();
 }
 
 Mesh RenderSystem::createRenderSurface()

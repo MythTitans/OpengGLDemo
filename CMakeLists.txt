@@ -11,8 +11,9 @@ endif ()
 set(CMAKE_CXX_STANDARD 17)
 
 add_executable(opengl_demo
-        src/Camera.cpp
         src/BlendShader.cpp
+        src/BlurShader.cpp
+        src/Camera.cpp
         src/CubeMap.cpp
         src/DirectionalShadowMapShader.cpp
         src/EmissiveShader.cpp
