@@ -26,6 +26,7 @@ add_executable(opengl_demo
         src/Mesh.cpp
         src/Model.cpp
         src/PhongLightShader.cpp
+        src/RenderFeatures.cpp
         src/RenderSystem.cpp
         src/RenderTarget.cpp
         src/Scene.cpp

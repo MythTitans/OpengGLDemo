@@ -9,7 +9,7 @@ class RenderSystem;
 class InputHandler
 {
   public:
-    InputHandler(Window& window, Camera& camera, RenderSystem& renderSystem);
+    InputHandler(Window& window, Camera& camera);
 
     void processInputs();
     void handleKeyPressed(int keyCode);
@@ -22,7 +22,6 @@ class InputHandler
   private:
     Window& window;
     Camera& camera;
-    RenderSystem& renderSystem;
     std::vector<bool> inputsMap;
     double horizontalMouseDelta;
     double verticalMouseDelta;

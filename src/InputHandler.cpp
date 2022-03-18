@@ -1,18 +1,11 @@
 #include "include/InputHandler.h"
 
 #include "include/Camera.h"
-#include "include/RenderSystem.h"
+#include "include/RenderFeatures.h"
 #include "include/Window.h"
 
-InputHandler::InputHandler(Window& window, Camera& camera, RenderSystem& renderSystem)
-    : window{window},
-      camera{camera},
-      renderSystem{renderSystem},
-      lastMouseX{0.0},
-      lastMouseY{0.0},
-      firstMouseMovement{true},
-      horizontalMouseDelta{0.0},
-      verticalMouseDelta{0.0}
+InputHandler::InputHandler(Window& window, Camera& camera)
+    : window{window}, camera{camera}, lastMouseX{0.0}, lastMouseY{0.0}, firstMouseMovement{true}, horizontalMouseDelta{0.0}, verticalMouseDelta{0.0}
 {
     inputsMap.resize(512);
     window.registerInputHandler(this);
@@ -82,7 +75,7 @@ void InputHandler::handleMouseMoved(double x, double y)
 
 void InputHandler::handleFeatureSelection(int keyCode) const
 {
-    auto toggleFeature = [this](RenderFeature feature) { renderSystem.setFeatureEnabled(feature, !renderSystem.isFeatureEnabled(feature)); };
+    auto toggleFeature = [](RenderFeature feature) { RenderFeatures::enableFeature(feature, !RenderFeatures::isFeatureEnabled(feature)); };
 
     if (keyCode == GLFW_KEY_1)
     {

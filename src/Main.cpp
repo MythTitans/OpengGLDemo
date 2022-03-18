@@ -26,7 +26,7 @@ int main()
         Window window{1920, 1080, "OpenGL Tech Demo"};
         Camera camera{{0, 0, -10}, 0, 0, glm::radians(60.0f), window.getAspectRatio(), 0.1f, 1000};
         RenderSystem renderer{window};
-        InputHandler inputHandler{window, camera, renderer};
+        InputHandler inputHandler{window, camera};
 
         std::shared_ptr<Model> ground = createGround(50.0f);
 

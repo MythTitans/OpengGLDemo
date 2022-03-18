@@ -8,6 +8,7 @@
 #include "include/Camera.h"
 #include "include/Entity.h"
 #include "include/Model.h"
+#include "include/RenderFeatures.h"
 #include "include/Scene.h"
 #include "include/Window.h"
 
@@ -29,8 +30,6 @@ RenderSystem::RenderSystem(const Window& window)
     glEnable(GL_CULL_FACE);
 
     glClearColor(0, 0, 0, 1);
-
-    features.fill(true);
 }
 
 void RenderSystem::render(const Scene& scene, const Camera& camera) const
@@ -46,16 +45,6 @@ void RenderSystem::render(const Scene& scene, const Camera& camera) const
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     blendColorEmissive();
-}
-
-void RenderSystem::setFeatureEnabled(RenderFeature feature, bool enabled)
-{
-    features[static_cast<int>(feature)] = enabled;
-}
-
-bool RenderSystem::isFeatureEnabled(RenderFeature feature) const
-{
-    return features[static_cast<int>(feature)];
 }
 
 void RenderSystem::computeDirectionalShadowMaps(const Scene& scene) const
@@ -173,7 +162,7 @@ void RenderSystem::renderEmissive(const Scene& scene, const Camera& camera) cons
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    if (isFeatureEnabled(RenderFeature::EMISSIVE_MAP))
+    if (RenderFeatures::isFeatureEnabled(RenderFeature::EMISSIVE_MAP))
     {
         emissiveShader.use();
         emissiveShader.setProjection(camera.getProjection());
@@ -200,7 +189,7 @@ void RenderSystem::renderEmissive(const Scene& scene, const Camera& camera) cons
 
 void RenderSystem::blurEmissive(int iterations) const
 {
-    if (!isFeatureEnabled(RenderFeature::GLOW_EFFECT))
+    if (!RenderFeatures::isFeatureEnabled(RenderFeature::GLOW_EFFECT))
     {
         return;
     }

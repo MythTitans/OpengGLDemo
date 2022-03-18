@@ -4,6 +4,7 @@
 
 #include "include/Common.h"
 #include "include/Material.h"
+#include "include/RenderFeatures.h"
 
 PhongLightShader::PhongLightShader()
     : MaterialShader{readFileContent("../../resources/shaders/phong.vert"), readFileContent("../../resources/shaders/phong.frag")},
@@ -177,7 +178,7 @@ void PhongLightShader::useMaterial(const Material* material) const
         glUniform1f(uniformMaterial.opacityLocation, material->getOpacity());
 
         auto* texture = material->getDiffuseMap();
-        if (texture)
+        if (texture && RenderFeatures::isFeatureEnabled(RenderFeature::DIFFUSE_MAP))
         {
             texture->use(0);
         }
@@ -188,7 +189,7 @@ void PhongLightShader::useMaterial(const Material* material) const
         }
 
         texture = material->getNormalMap();
-        if (texture)
+        if (texture && RenderFeatures::isFeatureEnabled(RenderFeature::NORMAL_MAP))
         {
             texture->use(1);
         }
@@ -198,7 +199,7 @@ void PhongLightShader::useMaterial(const Material* material) const
         }
 
         texture = material->getSpecularMap();
-        if (texture)
+        if (texture && RenderFeatures::isFeatureEnabled(RenderFeature::SPECULAR_MAP))
         {
             texture->use(2);
         }
