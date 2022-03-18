@@ -3,11 +3,7 @@
 #include <stdexcept>
 #include <thread>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
-
 #include "include/Camera.h"
-#include "include/Common.h"
 #include "include/CubeMap.h"
 #include "include/InputHandler.h"
 #include "include/Light.h"
@@ -66,7 +62,7 @@ int main()
         scene.addEntity(&blueSphere);
         scene.addLight(Light::directionalLight(1, {0.15, 0.3, 0.6}, {-10, 10, 10}, {1, -1, -1}));
         scene.addLight(Light::pointLight(2, {1, 0.25, 0.25}, {5, 3, 0}, 0.3, 0.2, 0.1));
-        //        scene.addLight(Light::spotLight(1.0f, {1.0f, 0.0f, 1.0f}, {-5.0f, 3.0f, 0.0f}, {2.0f, -1.0f, 0.0f}, 0.1f, 0.1f, 0.1f, glm::radians(90.0f)));
+        //        scene.addLight(Light::spotLight(2, {1.0f, 0.0f, 1.0f}, {-5.0f, 3.0f, 0.0f}, {2.0f, -1.0f, 0.0f}, 0.3f, 0.2f, 0.1f, glm::radians(30.0f)));
         scene.addLight(Light::pointLight(2, {0.25, 0.25, 1}, {-5, 3, 0}, 0.3, 0.2, 0.1));
 
         auto previousTime = std::chrono::steady_clock::now();

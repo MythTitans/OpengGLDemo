@@ -62,17 +62,20 @@ void RenderSystem::computeDirectionalShadowMaps(const Scene& scene) const
 
         glClear(GL_DEPTH_BUFFER_BIT);
 
-        directionalShadowMapShader.setLightTransform(light.computeLightTransform()[0]);
-
-        for (const auto& entity : scene.getEntities())
+        if (RenderFeatures::isFeatureEnabled(RenderFeature::SHADOW_MAP))
         {
-            directionalShadowMapShader.setTransform(entity->computeTransform());
-            auto* model = entity->getModel();
-            if (model)
+            directionalShadowMapShader.setLightTransform(light.computeLightTransform()[0]);
+
+            for (const auto& entity : scene.getEntities())
             {
-                for (const auto* mesh : model->getOpaqueMeshes())
+                directionalShadowMapShader.setTransform(entity->computeTransform());
+                auto* model = entity->getModel();
+                if (model)
                 {
-                    mesh->render();
+                    for (const auto* mesh : model->getOpaqueMeshes())
+                    {
+                        mesh->render();
+                    }
                 }
             }
         }
@@ -89,12 +92,15 @@ void RenderSystem::renderColor(const Scene& scene, const Camera& camera) const
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    skyboxShader.use();
-    skyboxShader.setProjection(camera.getProjection());
-    skyboxShader.setView(camera.getView());
+    if (RenderFeatures::isFeatureEnabled(RenderFeature::SKY_MAP))
+    {
+        skyboxShader.use();
+        skyboxShader.setProjection(camera.getProjection());
+        skyboxShader.setView(camera.getView());
 
-    scene.getSkybox().render(skyboxShader);
-    skyboxShader.unuse();
+        scene.getSkybox().render(skyboxShader);
+        skyboxShader.unuse();
+    }
 
     phongLightShader.use();
     phongLightShader.setProjection(camera.getProjection());

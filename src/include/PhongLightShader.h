@@ -73,7 +73,8 @@ class PhongLightShader : public MaterialShader
 
     std::unique_ptr<Texture> dummyDiffuse;
     std::unique_ptr<Texture> dummyNormal;
-    std::unique_ptr<Texture> dummySpecular;
+    std::unique_ptr<Texture> dummySpecularEnabled;
+    std::unique_ptr<Texture> dummySpecularDisabled;
 
     GLuint uniformProjectionLocation;
     GLuint uniformViewLocation;

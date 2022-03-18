@@ -10,7 +10,8 @@ PhongLightShader::PhongLightShader()
     : MaterialShader{readFileContent("../../resources/shaders/phong.vert"), readFileContent("../../resources/shaders/phong.frag")},
       dummyDiffuse{Texture::loadTexture("../../resources/textures/dummy.png")},
       dummyNormal{Texture::loadTexture("../../resources/textures/dummy_normal.png")},
-      dummySpecular{Texture::loadTexture("../../resources/textures/dummy.png")},
+      dummySpecularEnabled{Texture::loadTexture("../../resources/textures/dummy.png")},
+      dummySpecularDisabled{Texture::loadTexture("../../resources/textures/dummy_black.png")},
       uniformProjectionLocation{getUniformLocation("projection")},
       uniformViewLocation{getUniformLocation("view")},
       uniformTransformLocation{getUniformLocation("model")},
@@ -199,13 +200,17 @@ void PhongLightShader::useMaterial(const Material* material) const
         }
 
         texture = material->getSpecularMap();
-        if (texture && RenderFeatures::isFeatureEnabled(RenderFeature::SPECULAR_MAP))
+        if (!RenderFeatures::isFeatureEnabled(RenderFeature::SPECULAR_MAP))
+        {
+            dummySpecularDisabled->use(2);
+        }
+        else if (texture)
         {
             texture->use(2);
         }
         else
         {
-            dummySpecular->use(2);
+            dummySpecularEnabled->use(2);
         }
 
         glUniform1i(uniformMaterial.diffuseMapLocation, 0);

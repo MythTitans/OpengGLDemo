@@ -10,6 +10,8 @@ enum class RenderFeature
     NORMAL_MAP,
     SPECULAR_MAP,
     EMISSIVE_MAP,
+    SHADOW_MAP,
+    SKY_MAP,
     GLOW_EFFECT,
     _LAST_
 };

@@ -97,6 +97,16 @@ void InputHandler::handleFeatureSelection(int keyCode) const
         toggleFeature(RenderFeature::EMISSIVE_MAP);
     }
 
+    if (keyCode == GLFW_KEY_5)
+    {
+        toggleFeature(RenderFeature::SHADOW_MAP);
+    }
+
+    if (keyCode == GLFW_KEY_0)
+    {
+        toggleFeature(RenderFeature::SKY_MAP);
+    }
+
     if (keyCode == GLFW_KEY_G)
     {
         toggleFeature(RenderFeature::GLOW_EFFECT);
