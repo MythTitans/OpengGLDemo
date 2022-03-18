@@ -12,8 +12,8 @@ uniform mat4 model;
 
 void main()
 {
-	position = (model * vec4(vertPosition, 1)).xyz;
-	texCoords = vertTexCoords;
+    position = (model * vec4(vertPosition, 1)).xyz;
+    texCoords = vertTexCoords;
 
-	gl_Position = projection * view * model * vec4(vertPosition, 1);
+    gl_Position = projection * view * model * vec4(vertPosition, 1);
 }

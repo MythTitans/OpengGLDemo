@@ -7,5 +7,5 @@ uniform mat4 lightTransform;
 
 void main()
 {
-	gl_Position = lightTransform * model * vec4(vertPosition, 1);
+    gl_Position = lightTransform * model * vec4(vertPosition, 1);
 }

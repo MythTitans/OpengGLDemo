@@ -8,5 +8,5 @@ uniform samplerCube cubeMap;
 
 void main()
 {
-	finalColor = texture(cubeMap, texCoords);
+    finalColor = texture(cubeMap, texCoords);
 }

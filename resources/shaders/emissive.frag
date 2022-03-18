@@ -7,15 +7,15 @@ out vec4 finalColor;
 
 struct Material
 {
-	vec3 emissiveColor;
-	float emissivePower;
-	sampler2D emissiveMap;
+    vec3 emissiveColor;
+    float emissivePower;
+    sampler2D emissiveMap;
 };
 
 uniform Material material;
 
 void main()
 {
-	vec3 color = material.emissivePower * material.emissiveColor * texture(material.emissiveMap, texCoords).xyz;
-	finalColor = vec4(color, 1);
+    vec3 color = material.emissivePower * material.emissiveColor * texture(material.emissiveMap, texCoords).xyz;
+    finalColor = vec4(color, 1);
 }

@@ -23,18 +23,18 @@ uniform int directionalLightCount;
 
 void main()
 {
-	position = (model * vec4(vertPosition, 1)).xyz;
-	texCoords = vertTexCoords;
+    position = (model * vec4(vertPosition, 1)).xyz;
+    texCoords = vertTexCoords;
 
-	mat3 modelInverseTranspose = mat3(transpose(inverse(model)));
-	normal = modelInverseTranspose * vertNormal;
-	binormal = mat3(model) * vertBinormal;
-	tangent = mat3(model) * vertTangent;
+    mat3 modelInverseTranspose = mat3(transpose(inverse(model)));
+    normal = modelInverseTranspose * vertNormal;
+    binormal = mat3(model) * vertBinormal;
+    tangent = mat3(model) * vertTangent;
 
-	for(int i = 0; i < directionalLightCount; ++i)
-	{
-		directionalLightSpacePos[i] = directionalLightTransform[i] * model * vec4(vertPosition, 1);
-	}
+    for (int i = 0; i < directionalLightCount; ++i)
+    {
+        directionalLightSpacePos[i] = directionalLightTransform[i] * model * vec4(vertPosition, 1);
+    }
 
-	gl_Position = projection * view * model * vec4(vertPosition, 1);
+    gl_Position = projection * view * model * vec4(vertPosition, 1);
 }
