@@ -12,14 +12,11 @@
 
 struct PBRUniformMaterial
 {
-    GLuint ambientColorLocation;
-    GLuint diffuseColorLocation;
-    GLuint specularColorLocation;
-    GLuint specularPowerLocation;
-    GLuint diffuseMapLocation;
-    GLuint normalMapLocation;
-    GLuint specularMapLocation;
-    GLuint opacityLocation;
+    GLuint albedoLocation;
+    GLuint normalLocation;
+    GLuint metallicLocation;
+    GLuint roughnessLocation;
+    GLuint aoLocation;
 };
 
 class PBRLightShader : public LightShader
@@ -32,10 +29,11 @@ class PBRLightShader : public LightShader
     void unuseMaterial(const Material* material) const override;
 
   private:
-    std::unique_ptr<Texture> dummyDiffuse;
+    std::unique_ptr<Texture> dummyAlbedo;
     std::unique_ptr<Texture> dummyNormal;
-    std::unique_ptr<Texture> dummySpecularEnabled;
-    std::unique_ptr<Texture> dummySpecularDisabled;
+    std::unique_ptr<Texture> dummyMetallic;
+    std::unique_ptr<Texture> dummyRoughness;
+    std::unique_ptr<Texture> dummyAO;
 
     PBRUniformMaterial uniformMaterial;
 };

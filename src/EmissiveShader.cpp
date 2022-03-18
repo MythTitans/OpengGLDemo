@@ -46,7 +46,6 @@ void EmissiveShader::useMaterial(const Material* material) const
         }
         else
         {
-            // TODO try to remove this an check if texture is provided in shader instead
             dummyEmissive->use(0);
         }
 

@@ -15,14 +15,11 @@ out vec4 finalColor;
 
 struct Material
 {
-    vec3 ambientColor;
-    vec3 diffuseColor;
-    vec3 specularColor;
-    float specularPower;
-    sampler2D diffuseMap;
-    sampler2D normalMap;
-    sampler2D specularMap;
-    float opacity;
+    sampler2D albedo;
+    sampler2D normal;
+    sampler2D metallic;
+    sampler2D roughness;
+    sampler2D ao;
 };
 
 struct Light
@@ -65,132 +62,8 @@ uniform int spotLightCount;
 
 uniform Material material;
 
-vec3 computeLightColor(vec3 lightDirection, float lightIntensity, vec3 lightColor)
-{
-    mat3 matTBN = mat3(normalize(tangent), normalize(binormal), normalize(normal));
-    vec3 extractedNormal = texture(material.normalMap, texCoords).xyz;
-    extractedNormal = normalize(2 * (extractedNormal - 0.5));
-
-    vec3 realNormal = matTBN * extractedNormal;
-    float diffuseFactor = clamp(dot(-lightDirection, realNormal), 0.0, 1.0);
-    float specularFactor = 0.0;
-    if (diffuseFactor > 0.0)
-    {
-        vec3 eyeDirection = normalize(position - eyePosition);
-        vec3 reflectedEyeDirection = reflect(eyeDirection, realNormal);
-        specularFactor = clamp(dot(-lightDirection, reflectedEyeDirection), 0.0, 1.0);
-        if (specularFactor > 0.0)
-        {
-            specularFactor = pow(specularFactor, material.specularPower) * texture(material.specularMap, texCoords).x;
-        }
-    }
-
-    return lightIntensity * lightColor * (diffuseFactor * material.diffuseColor + specularFactor * material.specularColor);
-}
-
-float computeDirectionalShadowFactor(DirectionalLight light, sampler2D directionalLightShadowMap, vec4 directionalLightSpacePos)
-{
-    vec3 projectedCoords = directionalLightSpacePos.xyz / directionalLightSpacePos.w;
-    projectedCoords = projectedCoords * 0.5 + 0.5;
-
-    float currentDepth = projectedCoords.z;
-
-    float bias = 0.001;
-
-    float shadow = 0.0;
-    vec2 texelSize = 1.0 / textureSize(directionalLightShadowMap, 0);
-    for (int i = -1; i <= 1; ++i)
-    {
-        for (int j = -1; j <= 1; ++j)
-        {
-            float pcfDepth = texture(directionalLightShadowMap, projectedCoords.xy - vec2(i, j) * texelSize).r;
-            shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
-        }
-    }
-
-    shadow /= 9;
-
-    if (currentDepth >= 1.0)
-    {
-        shadow = 0.0;
-    }
-
-    return shadow;
-}
-
-vec3 computeDirectionalLight(DirectionalLight light, sampler2D directionalLightShadowMap, vec4 directionalLightSpacePos)
-{
-    float shadowFactor = computeDirectionalShadowFactor(light, directionalLightShadowMap, directionalLightSpacePos);
-    return (1 - shadowFactor) * computeLightColor(light.direction, light.base.intensity, light.base.color);
-}
-
-vec3 computeDirectionalLights()
-{
-    vec3 lightColor = vec3(0.0, 0.0, 0.0);
-
-    for (int i = 0; i < directionalLightCount; ++i)
-    {
-        lightColor += computeDirectionalLight(directionalLights[i], directionalLightShadowMaps[i], directionalLightSpacePos[i]);
-    }
-
-    return lightColor;
-}
-
-vec3 computePointLight(PointLight light)
-{
-    vec3 lightDirection = position - light.position;
-    float distance = length(lightDirection);
-    lightDirection = normalize(lightDirection);
-
-    float attenuation = light.constantAttenuation + light.linearAttenuation * distance + light.quadricAttenuation * distance * distance;
-    return computeLightColor(lightDirection, light.base.intensity, light.base.color) / attenuation;
-}
-
-vec3 computePointLights()
-{
-    vec3 lightColor = vec3(0.0, 0.0, 0.0);
-
-    for (int i = 0; i < pointLightCount; ++i)
-    {
-        PointLight light = pointLights[i];
-        lightColor += computePointLight(light);
-    }
-
-    return lightColor;
-}
-
-vec3 computeSpotLight(SpotLight light)
-{
-    vec3 lightDirection = normalize(position - light.base.position);
-    float factor = dot(lightDirection, light.direction);
-    if (factor > light.edge)
-    {
-        float coneFactor = (factor - light.edge) / (1.0 - light.edge);
-        return computePointLight(light.base) * coneFactor;
-    }
-    else
-    {
-        return vec3(0.0, 0.0, 0.0);
-    }
-}
-
-vec3 computeSpotLights()
-{
-    vec3 lightColor = vec3(0.0, 0.0, 0.0);
-
-    for (int i = 0; i < spotLightCount; ++i)
-    {
-        SpotLight light = spotLights[i];
-        lightColor += computeSpotLight(light);
-    }
-
-    return lightColor;
-}
-
 void main()
 {
-    vec3 lightColor = computeDirectionalLights() + computePointLights() + computeSpotLights();
-
-    vec3 color = lightColor * texture(material.diffuseMap, texCoords).xyz;
-    finalColor = vec4(color, material.opacity);
+    vec3 color = texture(material.metallic, texCoords).xyz;
+    finalColor = vec4(color, 1);
 }

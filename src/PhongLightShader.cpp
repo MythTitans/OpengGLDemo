@@ -46,7 +46,6 @@ void PhongLightShader::useMaterial(const Material* material) const
         }
         else
         {
-            // TODO try to remove this an check if texture is provided in shader instead
             dummyDiffuse->use(0);
         }
 
