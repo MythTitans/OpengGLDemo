@@ -20,11 +20,14 @@ add_executable(opengl_demo
         src/Entity.cpp
         src/InputHandler.cpp
         src/Light.cpp
+        src/LightShader.cpp
         src/Main.cpp
         src/Material.cpp
         src/MaterialShader.cpp
+
         src/Mesh.cpp
         src/Model.cpp
+        src/PBRLightShader.cpp
         src/PhongLightShader.cpp
         src/RenderFeatures.cpp
         src/RenderSystem.cpp

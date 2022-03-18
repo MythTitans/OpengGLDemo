@@ -28,10 +28,10 @@ int main()
 
         auto golemModel = Model::loadModel("../../resources/models/golem/Earth_Golem_OBJ.obj");
         auto redSphereMat = std::make_shared<Material>(
-            glm::vec3{}, glm::vec3{1, 0.25, 0.25}, glm::vec3{}, glm::vec3{1, 0.25, 0.25}, 0, 1, nullptr, nullptr, nullptr, nullptr, 1);
+            glm::vec3{}, glm::vec3{1, 0.25, 0.25}, glm::vec3{}, glm::vec3{1, 0.25, 0.25}, 0, 1, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, 1);
         auto redSphereModel = Model::loadModel("../../resources/models/sphere/sphere.obj", {redSphereMat, redSphereMat});
         auto blueSphereMat = std::make_shared<Material>(
-            glm::vec3{}, glm::vec3{0.25, 0.25, 1}, glm::vec3{}, glm::vec3{0.25, 0.25, 1}, 0, 1, nullptr, nullptr, nullptr, nullptr, 1);
+            glm::vec3{}, glm::vec3{0.25, 0.25, 1}, glm::vec3{}, glm::vec3{0.25, 0.25, 1}, 0, 1, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, 1);
         auto blueSphereModel = Model::loadModel("../../resources/models/sphere/sphere.obj", {blueSphereMat, blueSphereMat});
 
         Entity golem{golemModel};
@@ -117,7 +117,8 @@ std::unique_ptr<Model> createGround(float size)
     glm::vec3 fullWhite{1.0f, 1.0f, 1.0f};
 
     auto texture = Texture::loadTexture("../../resources/textures/dirt.png");
-    auto material = std::make_unique<Material>(fullWhite, fullWhite, fullWhite, fullWhite, 100.0f, 0, std::move(texture), nullptr, nullptr, nullptr, 1.0f);
+    auto material = std::make_unique<Material>(
+        fullWhite, fullWhite, fullWhite, fullWhite, 100.0f, 0, std::move(texture), nullptr, nullptr, nullptr, nullptr, nullptr, 1.0f);
     auto plane = std::make_unique<Mesh>(std::move(vertices), std::move(indices), material.get());
 
     std::vector<std::shared_ptr<Mesh>> meshes{1};

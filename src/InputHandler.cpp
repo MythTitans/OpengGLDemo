@@ -111,4 +111,9 @@ void InputHandler::handleFeatureSelection(int keyCode) const
     {
         toggleFeature(RenderFeature::GLOW_EFFECT);
     }
+
+    if (keyCode == GLFW_KEY_P)
+    {
+        toggleFeature(RenderFeature::PBR_LIGHT);
+    }
 }

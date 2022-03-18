@@ -13,6 +13,7 @@ enum class RenderFeature
     SHADOW_MAP,
     SKY_MAP,
     GLOW_EFFECT,
+    PBR_LIGHT,
     _LAST_
 };
 

@@ -7,6 +7,7 @@
 #include "DirectionalShadowMapShader.h"
 #include "EmissiveShader.h"
 #include "Mesh.h"
+#include "PBRLightShader.h"
 #include "PhongLightShader.h"
 #include "RenderTarget.h"
 #include "SkyboxShader.h"
@@ -42,6 +43,7 @@ class RenderSystem
     int displayHeight;
     GlewInitializer glewInitializer;
     PhongLightShader phongLightShader;
+    PBRLightShader pbrLightShader;
     SkyboxShader skyboxShader;
     DirectionalShadowMapShader directionalShadowMapShader;
     EmissiveShader emissiveShader;

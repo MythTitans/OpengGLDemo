@@ -13,9 +13,11 @@ class Material
              glm::vec3 emissiveColor,
              float specularPower,
              float emissivePower,
-             std::unique_ptr<Texture> diffuseMap,
+             std::unique_ptr<Texture> albedoMap,
              std::unique_ptr<Texture> normalMap,
-             std::unique_ptr<Texture> specularMap,
+             std::unique_ptr<Texture> metallicMap,
+             std::unique_ptr<Texture> roughnessMap,
+             std::unique_ptr<Texture> aoMap,
              std::unique_ptr<Texture> emissiveMap,
              float opacity);
 
@@ -49,9 +51,9 @@ class Material
         return emissivePower;
     }
 
-    inline const Texture* getDiffuseMap() const
+    inline const Texture* getAlbedoMap() const
     {
-        return diffuseMap.get();
+        return albedoMap.get();
     }
 
     inline const Texture* getNormalMap() const
@@ -59,9 +61,19 @@ class Material
         return normalMap.get();
     }
 
-    inline const Texture* getSpecularMap() const
+    inline const Texture* getMetallicMap() const
     {
-        return specularMap.get();
+        return metallicMap.get();
+    }
+
+    inline const Texture* getRoughnessMap() const
+    {
+        return roughnessMap.get();
+    }
+
+    inline const Texture* getAOMap() const
+    {
+        return aoMap.get();
     }
 
     inline const Texture* getEmissiveMap() const
@@ -91,9 +103,11 @@ class Material
     glm::vec3 emissiveColor;
     float specularPower;
     float emissivePower;
-    std::unique_ptr<Texture> diffuseMap;
+    std::unique_ptr<Texture> albedoMap;
     std::unique_ptr<Texture> normalMap;
-    std::unique_ptr<Texture> specularMap;
+    std::unique_ptr<Texture> metallicMap;
+    std::unique_ptr<Texture> roughnessMap;
+    std::unique_ptr<Texture> aoMap;
     std::unique_ptr<Texture> emissiveMap;
     float opacity;
 

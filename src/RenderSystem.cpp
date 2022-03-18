@@ -17,6 +17,7 @@ RenderSystem::RenderSystem(const Window& window)
       displayHeight{window.getFramebufferHeight()},
       glewInitializer{},
       phongLightShader{},
+      pbrLightShader{},
       skyboxShader{},
       directionalShadowMapShader{},
       emissiveShader{},
@@ -102,25 +103,31 @@ void RenderSystem::renderColor(const Scene& scene, const Camera& camera) const
         skyboxShader.unuse();
     }
 
-    phongLightShader.use();
-    phongLightShader.setProjection(camera.getProjection());
-    phongLightShader.setView(camera.getView());
-    phongLightShader.setEye(camera.getPosition());
+    const LightShader* lightShader = &phongLightShader;
+    if (RenderFeatures::isFeatureEnabled(RenderFeature::PBR_LIGHT))
+    {
+        lightShader = &pbrLightShader;
+    }
+
+    lightShader->use();
     phongLightShader.setAmbientColor(scene.getAmbientColor());
-    phongLightShader.setDirectionalLights(scene.getDirectionalLights(), scene.getDirectionalLightShadowMaps());
-    phongLightShader.setPointLights(scene.getPointLights());
-    phongLightShader.setSpotLights(scene.getSpotLights());
+    lightShader->setProjection(camera.getProjection());
+    lightShader->setView(camera.getView());
+    lightShader->setEye(camera.getPosition());
+    lightShader->setDirectionalLights(scene.getDirectionalLights(), scene.getDirectionalLightShadowMaps());
+    lightShader->setPointLights(scene.getPointLights());
+    lightShader->setSpotLights(scene.getSpotLights());
 
     std::vector<const Entity*> transparentEntities;
     for (const auto& entity : scene.getEntities())
     {
-        phongLightShader.setTransform(entity->computeTransform());
+        lightShader->setTransform(entity->computeTransform());
         auto* model = entity->getModel();
         if (model)
         {
             for (const auto* mesh : model->getOpaqueMeshes())
             {
-                mesh->render(phongLightShader);
+                mesh->render(*lightShader);
             }
 
             if (model->hasTransparentMeshes())
@@ -144,13 +151,13 @@ void RenderSystem::renderColor(const Scene& scene, const Camera& camera) const
 
     for (const auto* entity : transparentEntities)
     {
-        phongLightShader.setTransform(entity->computeTransform());
+        lightShader->setTransform(entity->computeTransform());
         auto* model = entity->getModel();
         if (model)
         {
             for (const auto* mesh : entity->getModel()->getTransparentMeshes())
             {
-                mesh->render(phongLightShader);
+                mesh->render(*lightShader);
             }
         }
     }
@@ -159,7 +166,7 @@ void RenderSystem::renderColor(const Scene& scene, const Camera& camera) const
 
     colorRT.unuseTarget();
 
-    phongLightShader.unuse();
+    lightShader->unuse();
 }
 
 void RenderSystem::renderEmissive(const Scene& scene, const Camera& camera) const

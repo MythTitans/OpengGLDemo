@@ -1,4 +1,4 @@
-#include "include/PhongLightShader.h"
+#include "include/PBRLightShader.h"
 
 #include <glm/gtc/type_ptr.hpp>
 
@@ -6,13 +6,12 @@
 #include "include/Material.h"
 #include "include/RenderFeatures.h"
 
-PhongLightShader::PhongLightShader()
-    : LightShader{readFileContent("../../resources/shaders/phong.frag")},
+PBRLightShader::PBRLightShader()
+    : LightShader{readFileContent("../../resources/shaders/pbr.frag")},
       dummyDiffuse{Texture::loadTexture("../../resources/textures/dummy.png")},
       dummyNormal{Texture::loadTexture("../../resources/textures/dummy_normal.png")},
       dummySpecularEnabled{Texture::loadTexture("../../resources/textures/dummy.png")},
-      dummySpecularDisabled{Texture::loadTexture("../../resources/textures/dummy_black.png")},
-      uniformAmbientColorLocation{getUniformLocation("ambientColor")}
+      dummySpecularDisabled{Texture::loadTexture("../../resources/textures/dummy_black.png")}
 {
     uniformMaterial.ambientColorLocation = getUniformLocation("material.ambientColor");
     uniformMaterial.diffuseColorLocation = getUniformLocation("material.diffuseColor");
@@ -24,12 +23,7 @@ PhongLightShader::PhongLightShader()
     uniformMaterial.opacityLocation = getUniformLocation("material.opacity");
 }
 
-void PhongLightShader::setAmbientColor(const glm::vec3& ambientColor) const
-{
-    glUniform3fv(uniformAmbientColorLocation, 1, glm::value_ptr(ambientColor));
-}
-
-void PhongLightShader::useMaterial(const Material* material) const
+void PBRLightShader::useMaterial(const Material* material) const
 {
     if (material)
     {
@@ -80,7 +74,7 @@ void PhongLightShader::useMaterial(const Material* material) const
     }
 }
 
-void PhongLightShader::unuseMaterial(const Material* material) const
+void PBRLightShader::unuseMaterial(const Material* material) const
 {
     if (material)
     {

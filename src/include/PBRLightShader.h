@@ -10,7 +10,7 @@
 #include "MaterialShader.h"
 #include "ShadowMap.h"
 
-struct PhongUniformMaterial
+struct PBRUniformMaterial
 {
     GLuint ambientColorLocation;
     GLuint diffuseColorLocation;
@@ -22,13 +22,12 @@ struct PhongUniformMaterial
     GLuint opacityLocation;
 };
 
-class PhongLightShader : public LightShader
+class PBRLightShader : public LightShader
 {
   public:
-    PhongLightShader();
-    PhongLightShader(const std::string& fragmentShaderCode) = delete;
-    PhongLightShader(const std::string& vertexShaderCode, const std::string& fragmentShaderCode) = delete;
-    void setAmbientColor(const glm::vec3& ambientColor) const;
+    PBRLightShader();
+    PBRLightShader(const std::string& fragmentShaderCode) = delete;
+    PBRLightShader(const std::string& vertexShaderCode, const std::string& fragmentShaderCode) = delete;
     void useMaterial(const Material* material) const override;
     void unuseMaterial(const Material* material) const override;
 
@@ -38,6 +37,5 @@ class PhongLightShader : public LightShader
     std::unique_ptr<Texture> dummySpecularEnabled;
     std::unique_ptr<Texture> dummySpecularDisabled;
 
-    GLuint uniformAmbientColorLocation;
-    PhongUniformMaterial uniformMaterial;
+    PBRUniformMaterial uniformMaterial;
 };

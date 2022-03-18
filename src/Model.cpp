@@ -248,6 +248,8 @@ std::vector<std::shared_ptr<Material>> Model::loadMaterials(const aiScene* scene
                                                   std::move(diffuseMap),
                                                   std::move(normalMap),
                                                   std::move(specularMap),
+                                                  nullptr,
+                                                  nullptr,
                                                   std::move(emissiveMap),
                                                   opacity);
     }
